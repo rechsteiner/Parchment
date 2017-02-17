@@ -97,11 +97,13 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
       
       let from = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(currentIndexPath.item),
-        insets: indicatorInsetsForIndex(currentIndexPath.item))
+        insets: indicatorInsetsForIndex(currentIndexPath.item),
+        indicatorOffset: indicatorOffsetForIndex(currentIndexPath.item))
       
       let to = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(upcomingIndexPath.item),
-        insets: indicatorInsetsForIndex(upcomingIndexPath.item))
+        insets: indicatorInsetsForIndex(upcomingIndexPath.item),
+        indicatorOffset: indicatorOffsetForIndex(upcomingIndexPath.item))
       
       indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(state.progress))
       return indicatorLayoutAttributes
@@ -147,6 +149,10 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
       return IndexPath(item: indexPath.item + 1, section: 0)
     }
     return indexPath
+  }
+    
+  fileprivate func indicatorOffsetForIndex(_ index: Int) -> CGFloat {
+    return options.indicatorSpacing
   }
   
   fileprivate func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {

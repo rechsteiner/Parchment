@@ -74,6 +74,7 @@ public protocol PagingOptions {
   var menuTransition: PagingMenuTransition { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
+  var indicatorSpacing: CGFloat { get }
   var borderOptions: PagingBorderOptions { get }
   var theme: PagingTheme { get }
 }
@@ -170,6 +171,10 @@ public extension PagingOptions {
   }
   
   var menuItemSpacing: CGFloat {
+    return 0
+  }
+    
+  var indicatorSpacing: CGFloat {
     return 0
   }
   

@@ -28,6 +28,7 @@ public enum PagingIndicatorOptions {
   case visible(
     height: CGFloat,
     zIndex: Int,
+    spacing: UIEdgeInsets,
     insets: UIEdgeInsets)
 }
 
@@ -74,7 +75,6 @@ public protocol PagingOptions {
   var menuTransition: PagingMenuTransition { get }
   var selectedScrollPosition: PagingSelectedScrollPosition { get }
   var indicatorOptions: PagingIndicatorOptions { get }
-  var indicatorSpacing: CGFloat { get }
   var borderOptions: PagingBorderOptions { get }
   var theme: PagingTheme { get }
 }
@@ -152,6 +152,7 @@ public extension PagingOptions {
     return .visible(
       height: 4,
       zIndex: Int.max,
+     spacing: UIEdgeInsets.zero,
       insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   }
   
@@ -171,10 +172,6 @@ public extension PagingOptions {
   }
   
   var menuItemSpacing: CGFloat {
-    return 0
-  }
-    
-  var indicatorSpacing: CGFloat {
     return 0
   }
   

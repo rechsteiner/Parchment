@@ -98,12 +98,12 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
       let from = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(currentIndexPath.item),
         insets: indicatorInsetsForIndex(currentIndexPath.item),
-        indicatorOffset: indicatorOffsetForIndex(currentIndexPath.item))
+        spacing: indicatorSpacingForIndex(currentIndexPath.item))
       
       let to = PagingIndicatorMetric(
         frame: indicatorFrameForIndex(upcomingIndexPath.item),
         insets: indicatorInsetsForIndex(upcomingIndexPath.item),
-        indicatorOffset: indicatorOffsetForIndex(upcomingIndexPath.item))
+        spacing: indicatorSpacingForIndex(upcomingIndexPath.item))
       
       indicatorLayoutAttributes.update(from: from, to: to, progress: fabs(state.progress))
       return indicatorLayoutAttributes
@@ -151,12 +151,15 @@ open class PagingCollectionViewLayout<T: PagingItem>: UICollectionViewFlowLayout
     return indexPath
   }
     
-  fileprivate func indicatorOffsetForIndex(_ index: Int) -> CGFloat {
-    return options.indicatorSpacing
+  fileprivate func indicatorSpacingForIndex(_ index: Int) -> UIEdgeInsets {
+    if case let .visible(_, _, insets, _) = options.indicatorOptions {
+        return insets
+    }
+    return UIEdgeInsets.zero
   }
   
   fileprivate func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {
-    if case let .visible(_, _, insets) = options.indicatorOptions {
+    if case let .visible(_, _, _, insets) = options.indicatorOptions {
       if index == range.lowerBound {
         return .left(insets.left)
       } else if index >= range.upperBound {

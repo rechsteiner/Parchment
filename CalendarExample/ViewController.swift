@@ -29,7 +29,10 @@ struct CalendarPagingTheme: PagingTheme {
 struct CalendarPagingOptions: PagingOptions {
   let menuItemClass: PagingCell.Type = CalendarPagingCell.self
   let menuItemSize: PagingMenuItemSize = .fixed(width: 48, height: 58)
-  let indicatorSpacing: CGFloat = 10
+  let indicatorOptions: PagingIndicatorOptions = .visible(height: 2,
+                                                          zIndex: Int.max,
+                                                          spacing: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8),
+                                                          insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   let theme: PagingTheme = CalendarPagingTheme()
 }
 

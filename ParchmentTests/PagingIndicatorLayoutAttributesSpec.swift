@@ -16,6 +16,7 @@ struct CustomPagingOptions: PagingOptions {
   let indicatorOptions: PagingIndicatorOptions = .visible(
     height: 20,
     zIndex: Int.max,
+    spacing: UIEdgeInsets(),
     insets: UIEdgeInsets())
 }
 
@@ -47,11 +48,13 @@ class PagingIndicatorLayoutAttributesSpec: QuickSpec {
         
         let from = PagingIndicatorMetric(
           frame: CGRect(x: 0, y: 0, width: 200, height: 0),
-          insets: .left(50))
+          insets: .left(50),
+          spacing: UIEdgeInsets())
         
         let to = PagingIndicatorMetric(
           frame: CGRect(x: 200, y: 0, width: 100, height: 0),
-          insets: .right(50))
+          insets: .right(50),
+          spacing: UIEdgeInsets())
         
         it("has the correct frame for the initial metric") {
           layoutAttributes.update(from: from, to: to, progress: 0)

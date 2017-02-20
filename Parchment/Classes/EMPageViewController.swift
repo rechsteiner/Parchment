@@ -198,6 +198,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
      */
     open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
         
+        if viewController == self.selectedViewController {
+            return
+        }
+        
         if (direction == .forward) {
             self.afterViewController = viewController
             self.layoutViews()

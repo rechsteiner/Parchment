@@ -299,6 +299,8 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     open override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
+        adjustingContentOffset = true
+        
         guard !scrolling else {
             return
         }
@@ -394,6 +396,8 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             } else if (self.navigationDirection == .reverse) {
                 self.beforeViewController!.endAppearanceTransition()
                 self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
+            } else {
+                self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             }
             
             self.didFinishScrollingCompletionHandler?(false)

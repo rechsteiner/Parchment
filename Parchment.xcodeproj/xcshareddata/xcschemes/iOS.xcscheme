@@ -37,6 +37,23 @@
                BlueprintName = "ParchmentTests"
                ReferencedContainer = "container:Parchment.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "PagingDiffSpec">
+               </Test>
+               <Test
+                  Identifier = "PagingIndicatorLayoutAttributesSpec">
+               </Test>
+               <Test
+                  Identifier = "PagingStateMachineSpec">
+               </Test>
+               <Test
+                  Identifier = "PagingStateSpec">
+               </Test>
+               <Test
+                  Identifier = "PagingViewControllerSpec">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

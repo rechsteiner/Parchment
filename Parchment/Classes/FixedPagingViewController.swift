@@ -14,7 +14,7 @@ open class FixedPagingViewController: PagingViewController<PagingIndexItem> {
   /// An array of the content view controllers. If you need to call
   /// `select(pagingItem:)` you can use the index of these view
   /// controller to select the item you want.
-  open let viewControllers: [UIViewController]
+  public let viewControllers: [UIViewController]
   
   /// Creates an instance of `FixedPagingViewController`. By default,
   /// it will select the first view controller in the array. You can

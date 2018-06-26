@@ -1,3 +1,4 @@
+/*
 import Foundation
 import Nimble
 import Quick
@@ -172,4 +173,4 @@ class PagingDiffSpec: QuickSpec {
   }
   
 }
-
+*/

@@ -446,14 +446,14 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     private func addChildIfNeeded(_ viewController: UIViewController) {
         self.scrollView.addSubview(viewController.view)
-        self.addChildViewController(viewController)
-        viewController.didMove(toParentViewController: self)
+        self.addChild(viewController)
+        viewController.didMove(toParent: self)
     }
     
     private func removeChildIfNeeded(_ viewController: UIViewController?) {
         viewController?.view.removeFromSuperview()
-        viewController?.didMove(toParentViewController: nil)
-        viewController?.removeFromParentViewController()
+        viewController?.didMove(toParent: nil)
+        viewController?.removeFromParent()
     }
     
     private func layoutViews() {
@@ -475,9 +475,9 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         self.adjustingContentOffset = true
         self.scrollView.contentOffset = CGPoint(x: self.isOrientationHorizontal ? viewWidth : 0, y: self.isOrientationHorizontal ? 0 : viewHeight)
         if self.isOrientationHorizontal {
-            self.scrollView.contentInset = UIEdgeInsetsMake(0, beforeInset, 0, afterInset)
+            self.scrollView.contentInset = UIEdgeInsets(top: 0, left: beforeInset, bottom: 0, right: afterInset)
         } else {
-            self.scrollView.contentInset = UIEdgeInsetsMake(beforeInset, 0, afterInset, 0)
+            self.scrollView.contentInset = UIEdgeInsets(top: beforeInset, left: 0, bottom: afterInset, right: 0)
         }
         self.adjustingContentOffset = false
         

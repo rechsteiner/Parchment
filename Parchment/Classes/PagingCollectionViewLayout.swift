@@ -426,7 +426,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     if case let .visible(_, _, insets, _) = options.indicatorOptions {
       return insets
     }
-    return UIEdgeInsets.zero
+    return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
   }
   
   private func indicatorInsetsForIndex(_ index: Int) -> PagingIndicatorMetric.Inset {

@@ -1,5 +1,12 @@
 import UIKit
 
+#if swift(>=4.2)
+import UIKit.UIGeometry
+extension UIEdgeInsets {
+    public static let zero = UIEdgeInsets()
+}
+#endif
+
 /// A view controller that lets you to page between views while
 /// showing menu items that scrolls along with the content. When using
 /// this class you need to provide a generic type that conforms to the
@@ -423,9 +430,9 @@ open class PagingViewController<T: PagingItem>:
   open override func viewDidLoad() {
     super.viewDidLoad()
     
-    addChildViewController(pageViewController)
+    addChild(pageViewController)
     pagingView.configure()
-    pageViewController.didMove(toParentViewController: self)
+    pageViewController.didMove(toParent: self)
     pageViewController.dataSource = self
     
     collectionView.showsHorizontalScrollIndicator = false

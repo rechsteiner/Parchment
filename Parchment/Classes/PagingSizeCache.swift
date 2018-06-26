@@ -14,12 +14,12 @@ class PagingSizeCache<T: PagingItem>  where T: Hashable & Comparable {
     
     NotificationCenter.default.addObserver(self,
       selector: #selector(applicationDidEnterBackground(notification:)),
-      name: NSNotification.Name.UIApplicationDidEnterBackground,
+      name: UIApplication.didEnterBackgroundNotification,
       object: nil)
     
     NotificationCenter.default.addObserver(self,
       selector: #selector(didReceiveMemoryWarning(notification:)),
-      name: NSNotification.Name.UIApplicationDidReceiveMemoryWarning,
+      name: UIApplication.didReceiveMemoryWarningNotification,
       object: nil)
   }
   

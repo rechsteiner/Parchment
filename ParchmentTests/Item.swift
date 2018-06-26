@@ -1,3 +1,4 @@
+/*
 import Foundation
 @testable import Parchment
 
@@ -16,3 +17,4 @@ func ==(lhs: Item, rhs: Item) -> Bool {
 func <(lhs: Item, rhs: Item) -> Bool {
   return lhs.index < rhs.index
 }
+*/

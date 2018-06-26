@@ -104,8 +104,8 @@ class ViewController: UIViewController {
     pagingViewController.indicatorOptions = .visible(
       height: 1,
       zIndex: Int.max,
-      spacing: UIEdgeInsets.zero,
-      insets: UIEdgeInsets.zero)
+      spacing: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
+      insets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
     
     pagingViewController.borderOptions = .visible(
       height: 1,

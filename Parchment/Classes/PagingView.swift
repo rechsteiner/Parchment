@@ -9,9 +9,9 @@ import UIKit
 /// `loadView:` in `PagingViewController` to use your subclass.
 open class PagingView: UIView {
   
-  open let options: PagingOptions
-  open let collectionView: UICollectionView
-  open let pageView: UIView
+  public let options: PagingOptions
+  public let collectionView: UICollectionView
+  public let pageView: UIView
   
   /// Creates an instance of `PagingView`.
   ///
@@ -53,19 +53,19 @@ open class PagingView: UIView {
     
     let horizontalCollectionViewContraints = NSLayoutConstraint.constraints(
       withVisualFormat: "H:|[collectionView]|",
-      options: NSLayoutFormatOptions(),
+      options: NSLayoutConstraint.FormatOptions(),
       metrics: metrics,
       views: views)
     
     let horizontalPagingContentViewContraints = NSLayoutConstraint.constraints(
       withVisualFormat: "H:|[pageView]|",
-      options: NSLayoutFormatOptions(),
+      options: NSLayoutConstraint.FormatOptions(),
       metrics: metrics,
       views: views)
     
     let verticalContraints = NSLayoutConstraint.constraints(
       withVisualFormat: "V:|[collectionView(==height)][pageView]|",
-      options: NSLayoutFormatOptions(),
+      options: NSLayoutConstraint.FormatOptions(),
       metrics: metrics,
       views: views)
     

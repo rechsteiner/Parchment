@@ -25,7 +25,7 @@ public class PagingOptions {
   public var borderColor: UIColor
   public var indicatorColor: UIColor
   
-  public var scrollPosition: UICollectionViewScrollPosition {
+    public var scrollPosition: UICollectionView.ScrollPosition {
     switch selectedScrollPosition {
     case .left:
       return .left
@@ -55,7 +55,7 @@ public class PagingOptions {
     menuTransition = .scrollAlongside
     menuInteraction = .scrolling
     menuItemClass = PagingTitleCell.self
-    menuInsets = UIEdgeInsets.zero
+    menuInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     menuItemSpacing = 0
     menuHorizontalAlignment = .left
     includeSafeAreaInsets = true
@@ -66,7 +66,7 @@ public class PagingOptions {
     indicatorOptions = .visible(
         height: 4,
         zIndex: Int.max,
-        spacing: UIEdgeInsets.zero,
+        spacing: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0),
         insets: UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8))
   
     borderOptions = .visible(

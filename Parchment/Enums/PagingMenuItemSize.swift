@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 public enum PagingMenuItemSize {
   case fixed(width: CGFloat, height: CGFloat)

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// The current state of the menu items. Indicates whether an item
 /// is currently selected or is scrolling to another item. Can be

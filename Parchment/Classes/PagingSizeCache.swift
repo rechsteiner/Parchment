@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class PagingSizeCache<T: PagingItem>  where T: Hashable & Comparable {
   

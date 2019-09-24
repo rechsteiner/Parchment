@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 enum PagingEvent<T: PagingItem> where T: Equatable {
   case scroll(progress: CGFloat)

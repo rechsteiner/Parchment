@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class PagingStateMachine<T: PagingItem> where T: Equatable {
   

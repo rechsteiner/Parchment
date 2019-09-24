@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 struct PagingTitleCellViewModel {
   let title: String?

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 /// The `PagingViewControllerDelegate` protocol defines methods that
 /// can used to determine when the user navigates between view

@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 struct PagingDistance<T: PagingItem> where T: Hashable & Comparable {
   

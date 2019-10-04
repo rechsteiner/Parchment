@@ -38,6 +38,7 @@ open class PagingTitleCell: PagingCell {
   
   open func configure() {
     contentView.addSubview(titleLabel)
+    isAccessibilityElement = true
   }
   
   open override func layoutSubviews() {
@@ -76,5 +77,14 @@ open class PagingTitleCell: PagingCell {
         with: attributes.progress)
     }
   }
-  
+
+  open override var accessibilityLabel: String? {
+    set { }
+    get { viewModel?.title }
+  }
+
+  open override var accessibilityTraits: UIAccessibilityTraits {
+    set { }
+    get { (viewModel?.selected ?? false) ? .selected : .none }
+  }
 }

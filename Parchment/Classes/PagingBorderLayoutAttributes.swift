@@ -27,7 +27,14 @@ open class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
     if case let .visible(height, index, borderInsets) = options.borderOptions {
       insets = borderInsets
       backgroundColor = options.borderColor
-      frame.origin.y = options.menuHeight - height
+        
+      switch options.menuPosition {
+      case .top:
+        frame.origin.y = options.menuHeight - height
+      case .bottom:
+        frame.origin.y = 0
+      }
+
       frame.size.height = height
       zIndex = index
     }

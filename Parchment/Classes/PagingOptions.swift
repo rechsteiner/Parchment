@@ -6,6 +6,7 @@ public class PagingOptions {
   public var menuItemSpacing: CGFloat
   public var menuInsets: UIEdgeInsets
   public var menuHorizontalAlignment: PagingMenuHorizontalAlignment
+  public var menuPosition: PagingMenuPosition
   public var menuTransition: PagingMenuTransition
   public var menuInteraction: PagingMenuInteraction
   public var contentInteraction: PagingContentInteraction
@@ -65,6 +66,7 @@ public class PagingOptions {
   public init() {
     selectedScrollPosition = .preferCentered
     menuItemSize = .sizeToFit(minWidth: 150, height: 40)
+    menuPosition = .top
     menuTransition = .scrollAlongside
     menuInteraction = .scrolling
     menuItemSource = .class(type: PagingTitleCell.self)

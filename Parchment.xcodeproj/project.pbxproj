@@ -157,6 +157,7 @@
 		95FB3AC821A1BE8C00EDAAD5 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		95FB3AC921A1BE8C00EDAAD5 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		95FE3AF91FFEDBCE00E6F2AD /* PagingDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */; };
+		E8CB720A23D70E1400A9B089 /* PagingMenuPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB720923D70E1400A9B089 /* PagingMenuPosition.swift */; };
 		E9D1BE1E211E409400E86B72 /* PagingMenuItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D1BE1D211E409400E86B72 /* PagingMenuItemSource.swift */; };
 /* End PBXBuildFile section */
 
@@ -517,6 +518,7 @@
 		95FB3ABD21A19A4E00EDAAD5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		95FB3AC121A19B2000EDAAD5 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingDistance.swift; sourceTree = "<group>"; };
+		E8CB720923D70E1400A9B089 /* PagingMenuPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuPosition.swift; sourceTree = "<group>"; };
 		E9D1BE1D211E409400E86B72 /* PagingMenuItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuItemSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -663,6 +665,7 @@
 				3E4090961C88BCC900800E22 /* PagingDirection.swift */,
 				3E4090971C88BCC900800E22 /* PagingEvent.swift */,
 				955444B91FC9CCBF001EC26B /* PagingIndicatorOptions.swift */,
+				E8CB720923D70E1400A9B089 /* PagingMenuPosition.swift */,
 				955444BF1FC9CCFF001EC26B /* PagingMenuHorizontalAlignment.swift */,
 				955444C31FC9CD2C001EC26B /* PagingMenuInteraction.swift */,
 				955444B71FC9CCA6001EC26B /* PagingMenuItemSize.swift */,
@@ -1491,6 +1494,7 @@
 				957F14091E35583500E562F8 /* PagingCellLayoutAttributes.swift in Sources */,
 				3E2AAD281CA831AB0044AAA5 /* UIView+constraints.swift in Sources */,
 				3E49C7251C8F5C13006269DD /* PagingBorderView.swift in Sources */,
+				E8CB720A23D70E1400A9B089 /* PagingMenuPosition.swift in Sources */,
 				95B301191E59FD1600B95D02 /* UIScrollView+near.swift in Sources */,
 				95E4BA721FF15EFE008871A3 /* IndexedPagingDataSource.swift in Sources */,
 				3E40909A1C88BCC900800E22 /* PagingDirection.swift in Sources */,

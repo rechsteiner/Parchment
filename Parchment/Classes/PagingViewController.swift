@@ -55,6 +55,13 @@ open class PagingViewController<T: PagingItem>:
     get { return options.menuHorizontalAlignment }
     set { options.menuHorizontalAlignment = newValue }
   }
+    
+  /// Determine the position of the menu relative to the content.
+  /// _Default: .top_
+  public var menuPosition: PagingMenuPosition {
+    get { return options.menuPosition }
+    set { options.menuPosition = newValue }
+  }
 
   /// Determine the transition behaviour of menu items while scrolling
   /// the content. _Default: .scrollAlongside_

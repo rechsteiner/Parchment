@@ -69,8 +69,14 @@ open class PagingView: UIView {
       metrics: metrics,
       views: views)
     
+    let verticalConstraintsFormat: String
+    switch options.menuPosition {
+    case .top:          verticalConstraintsFormat = "V:|[collectionView(==height)][pageView]|"
+    case .bottom:       verticalConstraintsFormat = "V:|[pageView][collectionView(==height)]|"
+    }
+
     let verticalContraints = NSLayoutConstraint.constraints(
-      withVisualFormat: "V:|[collectionView(==height)][pageView]|",
+      withVisualFormat: verticalConstraintsFormat,
       options: formatOptions,
       metrics: metrics,
       views: views)

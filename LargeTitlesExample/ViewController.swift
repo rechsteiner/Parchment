@@ -77,9 +77,9 @@ class ViewController: UIViewController {
         ])
         
         // Add the PagingViewController and constrain it to all edges.
-        addChildViewController(pagingViewController)
+        addChild(pagingViewController)
         view.addSubview(pagingViewController.view)
-        pagingViewController.didMove(toParentViewController: self)
+        pagingViewController.didMove(toParent: self)
         
         pagingViewController.dataSource = self
         pagingViewController.delegate = self

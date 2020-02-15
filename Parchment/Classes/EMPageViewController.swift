@@ -359,12 +359,11 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         // Scrolled forward
         if (selectedViewController == self.afterViewController) {
             
+            self.removeChildIfNeeded(self.beforeViewController)
             // Shift view controllers forward
             self.beforeViewController = self.selectedViewController
             self.selectedViewController = self.afterViewController
-          
-            self.removeChildIfNeeded(self.beforeViewController)
-          
+            
             if didViewAppear {
                 self.selectedViewController?.endAppearanceTransition()
                 self.beforeViewController?.endAppearanceTransition()
@@ -388,12 +387,11 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             // Scrolled reverse
         } else if (selectedViewController == self.beforeViewController) {
             
+            self.removeChildIfNeeded(self.afterViewController)
             // Shift view controllers reverse
             self.afterViewController = self.selectedViewController
             self.selectedViewController = self.beforeViewController
-          
-            self.removeChildIfNeeded(self.afterViewController)
-          
+            
             if didViewAppear {
                 self.selectedViewController?.endAppearanceTransition()
                 self.afterViewController?.endAppearanceTransition()

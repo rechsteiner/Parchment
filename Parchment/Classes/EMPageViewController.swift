@@ -348,101 +348,99 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - View Controller Management
     
     private func loadViewControllers(_ selectedViewController: UIViewController) {
-        
-        // Scrolled forward
         if (selectedViewController == self.afterViewController) {
-            
-            // Shift view controllers forward
-            self.beforeViewController = self.selectedViewController
-            self.selectedViewController = self.afterViewController
-            
-            endAppearanceTransition(for: self.selectedViewController)
-            
-            self.removeChildIfNeeded(self.beforeViewController)
-            endAppearanceTransition(for: self.beforeViewController)
-            
-            self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.beforeViewController, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
-            
-            self.didFinishScrollingCompletionHandler?(true)
-            self.didFinishScrollingCompletionHandler = nil
-            
-            // Load new before view controller if required
-            if self.loadNewAdjoiningViewControllersOnFinish {
-                self.loadBeforeViewController(for: selectedViewController)
-                self.loadNewAdjoiningViewControllersOnFinish = false
-            }
-            
-            // Load new after view controller
-            self.loadAfterViewController(for: selectedViewController)
-            
-            
-        // Scrolled reverse
+            shiftViewControllersForward(to: selectedViewController)
         } else if (selectedViewController == self.beforeViewController) {
-            
-            // Shift view controllers reverse
-            self.afterViewController = self.selectedViewController
-            self.selectedViewController = self.beforeViewController
-            
-            endAppearanceTransition(for: self.selectedViewController)
-            
-            self.removeChildIfNeeded(self.afterViewController)
-            endAppearanceTransition(for: self.afterViewController)
-            
-            self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.afterViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
-            
-            self.didFinishScrollingCompletionHandler?(true)
-            self.didFinishScrollingCompletionHandler = nil
-            
-            // Load new after view controller if required
-            if self.loadNewAdjoiningViewControllersOnFinish {
-                self.loadAfterViewController(for: selectedViewController)
-                self.loadNewAdjoiningViewControllersOnFinish = false
-            }
-            
-            // Load new before view controller
-            self.loadBeforeViewController(for: selectedViewController)
-        
-        // Scrolled but ended up where started
+            shiftViewControllersBackwards(to: selectedViewController)
         } else if (selectedViewController == self.selectedViewController) {
-            
-            self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
-            
-            if (self.navigationDirection == .forward) {
-                beginAppearanceTransition(for: self.afterViewController, isAppearing: false, animated: self.transitionAnimated)
-            } else if (self.navigationDirection == .reverse) {
-                beginAppearanceTransition(for: self.beforeViewController, isAppearing: false, animated: self.transitionAnimated)
-            }
-            
-            endAppearanceTransition(for: self.selectedViewController)
-            
-            // Remove hidden view controllers
-            self.removeChildIfNeeded(self.beforeViewController)
-            self.removeChildIfNeeded(self.afterViewController)
-            
-            if (self.navigationDirection == .forward) {
-                endAppearanceTransition(for: self.afterViewController)
-                self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, transitionSuccessful: false)
-            } else if (self.navigationDirection == .reverse) {
-                endAppearanceTransition(for: self.beforeViewController)
-                self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
-            }
-            
-            self.didFinishScrollingCompletionHandler?(false)
-            self.didFinishScrollingCompletionHandler = nil
-            
-            if self.loadNewAdjoiningViewControllersOnFinish {
-                if (self.navigationDirection == .forward) {
-                    self.loadAfterViewController(for: selectedViewController)
-                } else if (self.navigationDirection == .reverse) {
-                    self.loadBeforeViewController(for: selectedViewController)
-                }
-            }
-            
+            shiftViewControllersInPlace(to: selectedViewController)
         }
         
         self.navigationDirection = nil
         self.scrolling = false
+    }
+    
+    func shiftViewControllersForward(to selectedViewController: UIViewController) {
+        self.beforeViewController = self.selectedViewController
+        self.selectedViewController = self.afterViewController
         
+        endAppearanceTransition(for: self.selectedViewController)
+        
+        self.removeChildIfNeeded(self.beforeViewController)
+        endAppearanceTransition(for: self.beforeViewController)
+        
+        self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.beforeViewController, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
+        
+        self.didFinishScrollingCompletionHandler?(true)
+        self.didFinishScrollingCompletionHandler = nil
+        
+        // Load new before view controller if required
+        if self.loadNewAdjoiningViewControllersOnFinish {
+            self.loadBeforeViewController(for: selectedViewController)
+            self.loadNewAdjoiningViewControllersOnFinish = false
+        }
+        
+        // Load new after view controller
+        self.loadAfterViewController(for: selectedViewController)
+    }
+    
+    func shiftViewControllersBackwards(to selectedViewController: UIViewController) {
+        self.afterViewController = self.selectedViewController
+        self.selectedViewController = self.beforeViewController
+        
+        endAppearanceTransition(for: self.selectedViewController)
+        
+        self.removeChildIfNeeded(self.afterViewController)
+        endAppearanceTransition(for: self.afterViewController)
+        
+        self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.afterViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
+        
+        self.didFinishScrollingCompletionHandler?(true)
+        self.didFinishScrollingCompletionHandler = nil
+        
+        // Load new after view controller if required
+        if self.loadNewAdjoiningViewControllersOnFinish {
+            self.loadAfterViewController(for: selectedViewController)
+            self.loadNewAdjoiningViewControllersOnFinish = false
+        }
+        
+        // Load new before view controller
+        self.loadBeforeViewController(for: selectedViewController)
+    }
+    
+    func shiftViewControllersInPlace(to selectedViewController: UIViewController) {
+        self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
+        
+        if (self.navigationDirection == .forward) {
+            beginAppearanceTransition(for: self.afterViewController, isAppearing: false, animated: self.transitionAnimated)
+        } else if (self.navigationDirection == .reverse) {
+            beginAppearanceTransition(for: self.beforeViewController, isAppearing: false, animated: self.transitionAnimated)
+        }
+        
+        endAppearanceTransition(for: self.selectedViewController)
+        
+        // Remove hidden view controllers
+        self.removeChildIfNeeded(self.beforeViewController)
+        self.removeChildIfNeeded(self.afterViewController)
+        
+        if (self.navigationDirection == .forward) {
+            endAppearanceTransition(for: self.afterViewController)
+            self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, transitionSuccessful: false)
+        } else if (self.navigationDirection == .reverse) {
+            endAppearanceTransition(for: self.beforeViewController)
+            self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
+        }
+        
+        self.didFinishScrollingCompletionHandler?(false)
+        self.didFinishScrollingCompletionHandler = nil
+        
+        if self.loadNewAdjoiningViewControllersOnFinish {
+            if (self.navigationDirection == .forward) {
+                self.loadAfterViewController(for: selectedViewController)
+            } else if (self.navigationDirection == .reverse) {
+                self.loadBeforeViewController(for: selectedViewController)
+            }
+        }
     }
     
     private func loadBeforeViewController(for selectedViewController:UIViewController) {

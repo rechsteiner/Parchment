@@ -198,6 +198,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         - parameter completion: A block that's called after the transition is finished. The block parameter `transitionSuccessful` is `true` if the transition to the selected view controller was completed successfully.
     */
     open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
+        guard self.selectedViewController != viewController else { return }
         
         if (direction == .forward) {
             self.afterViewController = viewController

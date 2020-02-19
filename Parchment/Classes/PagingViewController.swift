@@ -636,7 +636,7 @@ open class PagingViewController:
   
   // MARK: EMPageViewControllerDelegate
   
-  open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
+    open func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController, progress: CGFloat) {
     guard let currentPagingItem = state.currentPagingItem else { return }
     let oldState = state
     
@@ -646,8 +646,7 @@ open class PagingViewController:
       pagingController.contentScrolled(progress: progress)
       
       if case .selected = oldState {
-        if let upcomingPagingItem = state.upcomingPagingItem,
-          let destinationViewController = destinationViewController {
+        if let upcomingPagingItem = state.upcomingPagingItem {
           delegate?.pagingViewController(
             self,
             willScrollToItem: upcomingPagingItem,

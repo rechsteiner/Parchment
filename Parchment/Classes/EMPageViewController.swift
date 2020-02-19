@@ -1,107 +1,107 @@
 /*
- 
- EMPageViewController.swift
- 
- Copyright (c) 2015-2016 Erik Malyak
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in all
- copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- SOFTWARE.
- 
- */
+
+  EMPageViewController.swift
+
+  Copyright (c) 2015-2019 Erik Malyak
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+*/
 
 import UIKit
 
 /**
- The `EMPageViewControllerDataSource` protocol is adopted to provide the view controllers that are displayed when the user scrolls through pages. Methods are called on an as-needed basis.
- 
- Each method returns a `UIViewController` object or `nil` if there are no view controllers to be displayed.
- 
- - note: If the data source is `nil`, gesture based scrolling will be disabled and all view controllers must be provided through `selectViewController:direction:animated:completion:`.
- */
+    The `EMPageViewControllerDataSource` protocol is adopted to provide the view controllers that are displayed when the user scrolls through pages. Methods are called on an as-needed basis.
+
+    Each method returns a `UIViewController` object or `nil` if there are no view controllers to be displayed.
+
+    - note: If the data source is `nil`, gesture based scrolling will be disabled and all view controllers must be provided through `selectViewController:direction:animated:completion:`.
+*/
 @objc public protocol EMPageViewControllerDataSource {
     
     /**
-     Called to optionally return a view controller that is to the left of a given view controller in a horizontal orientation, or above a given view controller in a vertical orientation.
-     
-     - parameter pageViewController: The page view controller
-     - parameter viewController: The point of reference view controller
-     
-     - returns: The view controller that is to the left of the given `viewController` in a horizontal orientation, or above the given `viewController` in a vertical orientation, or `nil` if there is no view controller to be displayed.
-     */
+        Called to optionally return a view controller that is to the left of a given view controller in a horizontal orientation, or above a given view controller in a vertical orientation.
+        
+        - parameter pageViewController: The page view controller
+        - parameter viewController: The point of reference view controller
+        
+        - returns: The view controller that is to the left of the given `viewController` in a horizontal orientation, or above the given `viewController` in a vertical orientation, or `nil` if there is no view controller to be displayed.
+    */
     func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController?
     
     /**
-     Called to optionally return a view controller that is to the right of a given view controller.
+        Called to optionally return a view controller that is to the right of a given view controller.
+
+        - parameter pageViewController: The page view controller
+        - parameter viewController: The point of reference view controller
      
-     - parameter pageViewController: The page view controller
-     - parameter viewController: The point of reference view controller
-     
-     - returns: The view controller that is to the right of the given `viewController` in a horizontal orientation, or below the given `viewController` in a vertical orientation, or `nil` if there is no view controller to be displayed.
-     */
+        - returns: The view controller that is to the right of the given `viewController` in a horizontal orientation, or below the given `viewController` in a vertical orientation, or `nil` if there is no view controller to be displayed.
+    */
     func em_pageViewController(_ pageViewController: EMPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController?
 }
 
 /**
- The EMPageViewControllerDelegate protocol is adopted to receive messages for all important events of the page transition process.
- */
+    The EMPageViewControllerDelegate protocol is adopted to receive messages for all important events of the page transition process.
+*/
 @objc public protocol EMPageViewControllerDelegate {
     
     /**
-     Called before scrolling to a new view controller.
-     
-     - note: This method will not be called if the starting view controller is `nil`. A common scenario where this will occur is when you initialize the page view controller and use `selectViewController:direction:animated:completion:` to load the first selected view controller.
-     
-     - important: If bouncing is enabled, it is possible this method will be called more than once for one page transition. It can be called before the initial scroll to the destination view controller (which is when it is usually called), and it can also be called when the scroll momentum carries over slightly to the view controller after the original destination view controller.
-     
-     - parameter pageViewController: The page view controller
-     - parameter startingViewController: The currently selected view controller the transition is starting from
-     - parameter destinationViewController: The view controller that will be scrolled to, where the transition should end
+        Called before scrolling to a new view controller.
+
+        - note: This method will not be called if the starting view controller is `nil`. A common scenario where this will occur is when you initialize the page view controller and use `selectViewController:direction:animated:completion:` to load the first selected view controller.
+
+        - important: If bouncing is enabled, it is possible this method will be called more than once for one page transition. It can be called before the initial scroll to the destination view controller (which is when it is usually called), and it can also be called when the scroll momentum carries over slightly to the view controller after the original destination view controller.
+
+        - parameter pageViewController: The page view controller
+        - parameter startingViewController: The currently selected view controller the transition is starting from
+        - parameter destinationViewController: The view controller that will be scrolled to, where the transition should end
      */
     @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, willStartScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController)
     
     /**
-     Called whenever there has been a scroll position change in a page transition. This method is very useful if you need to know the exact progress of the page transition animation.
-     
-     - note: This method will not be called if the starting view controller is `nil`. A common scenario where this will occur is when you initialize the page view controller and use `selectViewController:direction:animated:completion:` to load the first selected view controller.
-     
-     - parameter pageViewController: The page view controller
-     - parameter startingViewController: The currently selected view controller the transition is starting from
-     - parameter destinationViewController: The view controller being scrolled to where the transition should end
-     - parameter progress: The progress of the transition, where 0 is a neutral scroll position, >= 1 is a complete transition to the right view controller in a horizontal orientation, or the below view controller in a vertical orientation, and <= -1 is a complete transition to the left view controller in a horizontal orientation, or the above view controller in a vertical orientation. Values may be greater than 1 or less than -1 if bouncing is enabled and the scroll velocity is quick enough.
-     */
-    @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat)
+        Called whenever there has been a scroll position change in a page transition. This method is very useful if you need to know the exact progress of the page transition animation.
+
+        - note: This method will not be called if the starting view controller is `nil`. A common scenario where this will occur is when you initialize the page view controller and use `selectViewController:direction:animated:completion:` to load the first selected view controller.
+
+        - parameter pageViewController: The page view controller
+        - parameter startingViewController: The currently selected view controller the transition is starting from
+        - parameter destinationViewController: The view controller being scrolled to where the transition should end
+        - parameter progress: The progress of the transition, where 0 is a neutral scroll position, >= 1 is a complete transition to the right view controller in a horizontal orientation, or the below view controller in a vertical orientation, and <= -1 is a complete transition to the left view controller in a horizontal orientation, or the above view controller in a vertical orientation. Values may be greater than 1 or less than -1 if bouncing is enabled and the scroll velocity is quick enough.
+    */
+    @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, isScrollingFrom startingViewController: UIViewController, destinationViewController:UIViewController, progress: CGFloat)
     
     /**
-     Called after a page transition attempt has completed.
+        Called after a page transition attempt has completed.
      
-     - important: If bouncing is enabled, it is possible this method will be called more than once for one page transition. It can be called after the scroll transition to the intended destination view controller (which is when it is usually called), and it can also be called when the scroll momentum carries over slightly to the view controller after the intended destination view controller. In the latter scenario, `transitionSuccessful` will return `false` the second time it's called because the scroll view will bounce back to the intended destination view controller.
-     
-     - parameter pageViewController: The page view controller
-     - parameter startingViewController: The currently selected view controller the transition is starting from
-     - parameter destinationViewController: The view controller that has been attempted to be selected
-     - parameter transitionSuccessful: A Boolean whether the transition to the destination view controller was successful or not. If `true`, the new selected view controller is `destinationViewController`. If `false`, the transition returned to the view controller it started from, so the selected view controller is still `startingViewController`.
-     */
+        - important: If bouncing is enabled, it is possible this method will be called more than once for one page transition. It can be called after the scroll transition to the intended destination view controller (which is when it is usually called), and it can also be called when the scroll momentum carries over slightly to the view controller after the intended destination view controller. In the latter scenario, `transitionSuccessful` will return `false` the second time it's called because the scroll view will bounce back to the intended destination view controller.
+
+        - parameter pageViewController: The page view controller
+        - parameter startingViewController: The currently selected view controller the transition is starting from
+        - parameter destinationViewController: The view controller that has been attempted to be selected
+        - parameter transitionSuccessful: A Boolean whether the transition to the destination view controller was successful or not. If `true`, the new selected view controller is `destinationViewController`. If `false`, the transition returned to the view controller it started from, so the selected view controller is still `startingViewController`.
+    */
     @objc optional func em_pageViewController(_ pageViewController: EMPageViewController, didFinishScrollingFrom startingViewController: UIViewController?, destinationViewController:UIViewController, transitionSuccessful: Bool)
 }
 
 /**
- The navigation scroll direction.
- */
+    The navigation scroll direction.
+*/
 @objc public enum EMPageViewControllerNavigationDirection : Int {
     /// Forward direction. Can be right in a horizontal orientation or down in a vertical orientation.
     case forward
@@ -110,8 +110,8 @@ import UIKit
 }
 
 /**
- The navigation scroll orientation.
- */
+    The navigation scroll orientation.
+*/
 @objc public enum EMPageViewControllerNavigationOrientation: Int {
     /// Horiziontal orientation. Scrolls left and right.
     case horizontal
@@ -138,7 +138,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     private var isOrientationHorizontal: Bool {
         return self.navigationOrientation == .horizontal
     }
-    
+
     /// The underlying `UIScrollView` responsible for scrolling page views.
     /// - important: Properties should be set with caution to prevent unexpected behavior.
     open private(set) lazy var scrollView: UIScrollView = {
@@ -156,13 +156,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /// The view controller before the selected view controller.
-    var beforeViewController: UIViewController?
+    private var beforeViewController: UIViewController?
     
     /// The currently selected view controller. Can be `nil` if no view controller is selected.
     open private(set) var selectedViewController: UIViewController?
     
     /// The view controller after the selected view controller.
-    var afterViewController: UIViewController?
+    private var afterViewController: UIViewController?
     
     /// Boolean that indicates whether the page controller is currently in the process of scrolling.
     open private(set) var scrolling = false
@@ -186,21 +186,17 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }
     
     /**
-     Sets the view controller that will be selected after the animation. This method is also used to provide the first view controller that will be selected in the page view controller.
-     
-     If a data source has been set, the view controllers before and after the selected view controller will also be loaded but not appear yet.
-     
-     - important: If you are using a data source, make sure you set `dataSource` before calling `selectViewController:direction:animated:completion:`
-     
-     - parameter viewController: The view controller to be selected.
-     - parameter direction: The direction of the navigation and animation, if applicable.
-     - parameter completion: A block that's called after the transition is finished. The block parameter `transitionSuccessful` is `true` if the transition to the selected view controller was completed successfully.
-     */
+        Sets the view controller that will be selected after the animation. This method is also used to provide the first view controller that will be selected in the page view controller.
+
+        If a data source has been set, the view controllers before and after the selected view controller will also be loaded but not appear yet.
+
+        - important: If you are using a data source, make sure you set `dataSource` before calling `selectViewController:direction:animated:completion:`
+
+        - parameter viewController: The view controller to be selected.
+        - parameter direction: The direction of the navigation and animation, if applicable.
+        - parameter completion: A block that's called after the transition is finished. The block parameter `transitionSuccessful` is `true` if the transition to the selected view controller was completed successfully.
+    */
     open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
-        
-        if viewController == self.selectedViewController {
-            return
-        }
         
         if (direction == .forward) {
             self.afterViewController = viewController
@@ -215,12 +211,12 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         }
         
     }
-  
+
     open func removeAllViewControllers() {
         self.removeChildIfNeeded(beforeViewController)
         self.removeChildIfNeeded(selectedViewController)
         self.removeChildIfNeeded(afterViewController)
-      
+
         beforeViewController = nil
         selectedViewController = nil
         afterViewController = nil
@@ -279,50 +275,19 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
-    
+
     @nonobjc @available(*, unavailable, renamed: "scrollForward(animated:completion:)")
     open func scrollForwardAnimated(_ animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
         self.scrollForward(animated: animated, completion: completion)
     }
-    
+
     @nonobjc @available(*, unavailable, renamed: "scrollReverse(animated:completion:)")
     open func scrollReverseAnimated(_ animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
         self.scrollReverse(animated: animated, completion: completion)
     }
     
+    
     // MARK: - View Controller Overrides
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let selectedViewController = selectedViewController {
-            selectedViewController.beginAppearanceTransition(true, animated: animated)
-        }
-    }
-
-    private var didViewAppear: Bool = false
-    
-    open override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        didViewAppear = true
-        if let selectedViewController = selectedViewController {
-            selectedViewController.endAppearanceTransition()
-        }
-    }
-    
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        if let selectedViewController = selectedViewController {
-            selectedViewController.beginAppearanceTransition(false, animated: animated)
-        }
-    }
-    
-    open override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        didViewAppear = false
-        if let selectedViewController = selectedViewController {
-            selectedViewController.endAppearanceTransition()
-        }
-    }
     
     // Overriden to have control of accurate view appearance method calls
     open override var shouldAutomaticallyForwardAppearanceMethods : Bool {
@@ -339,16 +304,47 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     open override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
-        adjustingContentOffset = true
-                
+        guard !scrolling else {
+            return
+        }
+        
         self.scrollView.frame = self.view.bounds
         if self.isOrientationHorizontal {
             self.scrollView.contentSize = CGSize(width: self.view.bounds.width * 3, height: self.view.bounds.height)
         } else {
             self.scrollView.contentSize = CGSize(width: self.view.bounds.width, height: self.view.bounds.height * 3)
         }
-        
+
         self.layoutViews()
+    }
+    
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let selectedViewController = self.selectedViewController {
+            selectedViewController.beginAppearanceTransition(true, animated: animated)
+        }
+    }
+
+     open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let selectedViewController = self.selectedViewController {
+            selectedViewController.endAppearanceTransition()
+        }
+    }
+
+     open override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if let selectedViewController = self.selectedViewController {
+            selectedViewController.beginAppearanceTransition(false, animated: animated)
+        }
+    }
+
+     open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if let selectedViewController = self.selectedViewController {
+            selectedViewController.endAppearanceTransition()
+        }
     }
     
     
@@ -362,13 +358,11 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             // Shift view controllers forward
             self.beforeViewController = self.selectedViewController
             self.selectedViewController = self.afterViewController
-          
+            
+            self.selectedViewController!.endAppearanceTransition()
+            
             self.removeChildIfNeeded(self.beforeViewController)
-          
-            if didViewAppear {
-                self.selectedViewController?.endAppearanceTransition()
-                self.beforeViewController?.endAppearanceTransition()
-            }
+            self.beforeViewController?.endAppearanceTransition()
             
             self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.beforeViewController, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             
@@ -385,19 +379,17 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.loadAfterViewController(for: selectedViewController)
             
             
-            // Scrolled reverse
+        // Scrolled reverse
         } else if (selectedViewController == self.beforeViewController) {
             
             // Shift view controllers reverse
             self.afterViewController = self.selectedViewController
             self.selectedViewController = self.beforeViewController
-          
+            
+            self.selectedViewController!.endAppearanceTransition()
+            
             self.removeChildIfNeeded(self.afterViewController)
-          
-            if didViewAppear {
-                self.selectedViewController?.endAppearanceTransition()
-                self.afterViewController?.endAppearanceTransition()
-            }
+            self.afterViewController?.endAppearanceTransition()
             
             self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.afterViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             
@@ -412,8 +404,8 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             
             // Load new before view controller
             self.loadBeforeViewController(for: selectedViewController)
-            
-            // Scrolled but ended up where started
+        
+        // Scrolled but ended up where started
         } else if (selectedViewController == self.selectedViewController) {
             
             self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
@@ -423,10 +415,8 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             } else if (self.navigationDirection == .reverse) {
                 self.beforeViewController!.beginAppearanceTransition(false, animated: self.transitionAnimated)
             }
-          
-            if didViewAppear {
-                self.selectedViewController?.endAppearanceTransition()
-            }
+            
+            self.selectedViewController!.endAppearanceTransition()
             
             // Remove hidden view controllers
             self.removeChildIfNeeded(self.beforeViewController)
@@ -438,8 +428,6 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             } else if (self.navigationDirection == .reverse) {
                 self.beforeViewController!.endAppearanceTransition()
                 self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
-            } else {
-                self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             }
             
             self.didFinishScrollingCompletionHandler?(false)
@@ -462,20 +450,12 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     private func loadBeforeViewController(for selectedViewController:UIViewController) {
         // Retreive the new before controller from the data source if available, otherwise set as nil
-        if let beforeViewController = self.dataSource?.em_pageViewController(self, viewControllerBeforeViewController: selectedViewController) {
-            self.beforeViewController = beforeViewController
-        } else {
-            self.beforeViewController = nil
-        }
+        self.beforeViewController = self.dataSource?.em_pageViewController(self, viewControllerBeforeViewController: selectedViewController)
     }
     
     private func loadAfterViewController(for selectedViewController:UIViewController) {
         // Retreive the new after controller from the data source if available, otherwise set as nil
-        if let afterViewController = self.dataSource?.em_pageViewController(self, viewControllerAfterViewController: selectedViewController) {
-            self.afterViewController = afterViewController
-        } else {
-            self.afterViewController = nil
-        }
+        self.afterViewController = self.dataSource?.em_pageViewController(self, viewControllerAfterViewController: selectedViewController)
     }
     
     
@@ -483,26 +463,14 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     private func addChildIfNeeded(_ viewController: UIViewController) {
         self.scrollView.addSubview(viewController.view)
-      
-        #if swift(>=4.2)
         self.addChild(viewController)
         viewController.didMove(toParent: self)
-        #else
-        self.addChildViewController(viewController)
-        viewController.didMove(toParentViewController: self)
-        #endif
     }
     
     private func removeChildIfNeeded(_ viewController: UIViewController?) {
         viewController?.view.removeFromSuperview()
-      
-        #if swift(>=4.2)
         viewController?.didMove(toParent: nil)
         viewController?.removeFromParent()
-        #else
-        viewController?.didMove(toParentViewController: nil)
-        viewController?.removeFromParentViewController()
-        #endif
     }
     
     private func layoutViews() {
@@ -524,9 +492,9 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         self.adjustingContentOffset = true
         self.scrollView.contentOffset = CGPoint(x: self.isOrientationHorizontal ? viewWidth : 0, y: self.isOrientationHorizontal ? 0 : viewHeight)
         if self.isOrientationHorizontal {
-            self.scrollView.contentInset = UIEdgeInsets(top: 0, left: beforeInset, bottom: 0, right: afterInset)
+            self.scrollView.contentInset = UIEdgeInsets.init(top: 0, left: beforeInset, bottom: 0, right: afterInset)
         } else {
-            self.scrollView.contentInset = UIEdgeInsets(top: beforeInset, left: 0, bottom: afterInset, right: 0)
+            self.scrollView.contentInset = UIEdgeInsets.init(top: beforeInset, left: 0, bottom: afterInset, right: 0)
         }
         self.adjustingContentOffset = false
         
@@ -565,67 +533,51 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if !adjustingContentOffset {
-            
+        
             let distance = self.isOrientationHorizontal ? self.view.bounds.width : self.view.bounds.height
             let progress = ((self.isOrientationHorizontal ? scrollView.contentOffset.x : scrollView.contentOffset.y) - distance) / distance
             
             // Scrolling forward / after
             if (progress > 0) {
-                if let afterViewController = afterViewController {
+                if (self.afterViewController != nil) {
                     if !scrolling { // call willScroll once
-                        self.willScroll(from: self.selectedViewController, to: afterViewController)
+                        self.willScroll(from: self.selectedViewController, to: self.afterViewController!)
                         self.scrolling = true
                     }
                     
-                    if let selectedViewController = selectedViewController,
-                        self.navigationDirection == .reverse { // check if direction changed
-                        self.didFinishScrolling(to: selectedViewController)
-                        self.willScroll(from: selectedViewController, to: afterViewController)
+                    if self.navigationDirection == .reverse { // check if direction changed
+                        self.didFinishScrolling(to: self.selectedViewController!)
+                        self.willScroll(from: self.selectedViewController, to: self.afterViewController!)
                     }
                     
                     self.navigationDirection = .forward
                     
-                    if let selectedViewController = selectedViewController {
-                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectedViewController, destinationViewController: afterViewController, progress: progress)
-                    }
-                } else {
-                    if let selectedViewController = selectedViewController {
-                        self.delegate?.em_pageViewController?(self,
-                                                              isScrollingFrom: selectedViewController,
-                                                              destinationViewController: nil,
-                                                              progress: progress)
+                    if (self.selectedViewController != nil) {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, progress: progress)
                     }
                 }
                 
-                // Scrolling reverse / before
+            // Scrolling reverse / before
             } else if (progress < 0) {
-                if let beforeViewController = beforeViewController {
+                if (self.beforeViewController != nil) {
                     if !scrolling { // call willScroll once
-                        self.willScroll(from: selectedViewController, to: beforeViewController)
+                        self.willScroll(from: self.selectedViewController, to: self.beforeViewController!)
                         self.scrolling = true
                     }
                     
-                    if let selectedViewController = selectedViewController,
-                        self.navigationDirection == .forward { // check if direction changed
-                        self.didFinishScrolling(to: selectedViewController)
-                        self.willScroll(from: selectedViewController, to: beforeViewController)
+                    if self.navigationDirection == .forward { // check if direction changed
+                        self.didFinishScrolling(to: self.selectedViewController!)
+                        self.willScroll(from: self.selectedViewController, to: self.beforeViewController!)
                     }
                     
                     self.navigationDirection = .reverse
                     
-                    if let selectedViewController = selectedViewController {
-                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectedViewController, destinationViewController: beforeViewController, progress: progress)
-                    }
-                } else {
-                    if let selectedViewController = selectedViewController {
-                        self.delegate?.em_pageViewController?(self,
-                                                              isScrollingFrom: selectedViewController,
-                                                              destinationViewController: nil,
-                                                              progress: progress)
+                    if (self.selectedViewController != nil) {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, progress: progress)
                     }
                 }
                 
-                // At zero
+            // At zero
             } else {
                 if (self.navigationDirection == .forward) {
                     self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, progress: progress)
@@ -657,15 +609,15 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         
         if self.isOrientationHorizontal {
             if  (self.beforeViewController != nil && self.afterViewController != nil) || // It isn't at the beginning or end of the page collection
-              (self.afterViewController != nil && self.beforeViewController == nil && scrollView.contentOffset.x > abs(scrollView.contentInset.left)) || // If it's at the beginning of the collection, the decelleration can't be triggered by scrolling away from, than torwards the inset
-              (self.beforeViewController != nil && self.afterViewController == nil && scrollView.contentOffset.x < abs(scrollView.contentInset.right)) { // Same as the last condition, but at the end of the collection
-                scrollView.setContentOffset(CGPoint(x: self.view.bounds.width, y: 0), animated: true)
+                (self.afterViewController != nil && self.beforeViewController == nil && scrollView.contentOffset.x > abs(scrollView.contentInset.left)) || // If it's at the beginning of the collection, the decelleration can't be triggered by scrolling away from, than torwards the inset
+                (self.beforeViewController != nil && self.afterViewController == nil && scrollView.contentOffset.x < abs(scrollView.contentInset.right)) { // Same as the last condition, but at the end of the collection
+                    scrollView.setContentOffset(CGPoint(x: self.view.bounds.width, y: 0), animated: true)
             }
         } else {
             if  (self.beforeViewController != nil && self.afterViewController != nil) || // It isn't at the beginning or end of the page collection
-              (self.afterViewController != nil && self.beforeViewController == nil && scrollView.contentOffset.y > abs(scrollView.contentInset.top)) || // If it's at the beginning of the collection, the decelleration can't be triggered by scrolling away from, than torwards the inset
-              (self.beforeViewController != nil && self.afterViewController == nil && scrollView.contentOffset.y < abs(scrollView.contentInset.bottom)) { // Same as the last condition, but at the end of the collection
-                scrollView.setContentOffset(CGPoint(x: 0, y: self.view.bounds.height), animated: true)
+                (self.afterViewController != nil && self.beforeViewController == nil && scrollView.contentOffset.y > abs(scrollView.contentInset.top)) || // If it's at the beginning of the collection, the decelleration can't be triggered by scrolling away from, than torwards the inset
+                (self.beforeViewController != nil && self.afterViewController == nil && scrollView.contentOffset.y < abs(scrollView.contentInset.bottom)) { // Same as the last condition, but at the end of the collection
+                    scrollView.setContentOffset(CGPoint(x: 0, y: self.view.bounds.height), animated: true)
             }
         }
         

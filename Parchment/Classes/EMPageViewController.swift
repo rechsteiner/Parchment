@@ -174,6 +174,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     private var loadNewAdjoiningViewControllersOnFinish = false
     private var didFinishScrollingCompletionHandler: ((_ transitionSuccessful: Bool) -> Void)?
     private var transitionAnimated = false // Used for accurate view appearance messages
+    private var viewHasAppeared = false // Used to track if viewDidAppear has been called
     
     // MARK: - Public Methods
     
@@ -320,31 +321,27 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     
     
     open override func viewWillAppear(_ animated: Bool) {
+        print("[EMPageViewController] viewWillAppear")
         super.viewWillAppear(animated)
-        if let selectedViewController = self.selectedViewController {
-            selectedViewController.beginAppearanceTransition(true, animated: animated)
-        }
+        beginAppearanceTransition(for: selectedViewController, isAppearing: true, animated: animated)
     }
 
      open override func viewDidAppear(_ animated: Bool) {
+        print("[EMPageViewController] viewDidAppear")
         super.viewDidAppear(animated)
-        if let selectedViewController = self.selectedViewController {
-            selectedViewController.endAppearanceTransition()
-        }
+        viewHasAppeared = true
+        endAppearanceTransition(for: self.selectedViewController)
     }
 
      open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if let selectedViewController = self.selectedViewController {
-            selectedViewController.beginAppearanceTransition(false, animated: animated)
-        }
+        beginAppearanceTransition(for: self.selectedViewController, isAppearing: false, animated: animated)
     }
 
      open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if let selectedViewController = self.selectedViewController {
-            selectedViewController.endAppearanceTransition()
-        }
+        viewHasAppeared = false
+        endAppearanceTransition(for: self.selectedViewController)
     }
     
     
@@ -359,10 +356,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.beforeViewController = self.selectedViewController
             self.selectedViewController = self.afterViewController
             
-            self.selectedViewController!.endAppearanceTransition()
+            endAppearanceTransition(for: self.selectedViewController)
             
             self.removeChildIfNeeded(self.beforeViewController)
-            self.beforeViewController?.endAppearanceTransition()
+            endAppearanceTransition(for: self.beforeViewController)
             
             self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.beforeViewController, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             
@@ -386,10 +383,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.afterViewController = self.selectedViewController
             self.selectedViewController = self.beforeViewController
             
-            self.selectedViewController!.endAppearanceTransition()
+            endAppearanceTransition(for: self.selectedViewController)
             
             self.removeChildIfNeeded(self.afterViewController)
-            self.afterViewController?.endAppearanceTransition()
+            endAppearanceTransition(for: self.afterViewController)
             
             self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.afterViewController!, destinationViewController: self.selectedViewController!, transitionSuccessful: true)
             
@@ -411,22 +408,22 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.selectedViewController!.beginAppearanceTransition(true, animated: self.transitionAnimated)
             
             if (self.navigationDirection == .forward) {
-                self.afterViewController!.beginAppearanceTransition(false, animated: self.transitionAnimated)
+                beginAppearanceTransition(for: self.afterViewController, isAppearing: false, animated: self.transitionAnimated)
             } else if (self.navigationDirection == .reverse) {
-                self.beforeViewController!.beginAppearanceTransition(false, animated: self.transitionAnimated)
+                beginAppearanceTransition(for: self.beforeViewController, isAppearing: false, animated: self.transitionAnimated)
             }
             
-            self.selectedViewController!.endAppearanceTransition()
+            endAppearanceTransition(for: self.selectedViewController)
             
             // Remove hidden view controllers
             self.removeChildIfNeeded(self.beforeViewController)
             self.removeChildIfNeeded(self.afterViewController)
             
             if (self.navigationDirection == .forward) {
-                self.afterViewController!.endAppearanceTransition()
+                endAppearanceTransition(for: self.afterViewController)
                 self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, transitionSuccessful: false)
             } else if (self.navigationDirection == .reverse) {
-                self.beforeViewController!.endAppearanceTransition()
+                endAppearanceTransition(for: self.beforeViewController)
                 self.delegate?.em_pageViewController?(self, didFinishScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, transitionSuccessful: false)
             }
             
@@ -462,17 +459,31 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     // MARK: - View Management
     
     private func addChildIfNeeded(_ viewController: UIViewController) {
-        self.scrollView.addSubview(viewController.view)
+        print("[EMPageViewController] addChild \(viewController.debugDescription)")
         self.addChild(viewController)
+        self.scrollView.addSubview(viewController.view)
         viewController.didMove(toParent: self)
     }
     
     private func removeChildIfNeeded(_ viewController: UIViewController?) {
-        viewController?.view.removeFromSuperview()
+        if let vc = viewController {
+            print("[EMPageViewController] removeChild \(vc.debugDescription)")
+        }
         viewController?.didMove(toParent: nil)
+        viewController?.view.removeFromSuperview()
         viewController?.removeFromParent()
     }
     
+    private func beginAppearanceTransition(for viewController: UIViewController?, isAppearing: Bool, animated: Bool) {
+        guard let viewController = viewController, viewController.parent == self else { return }
+        viewController.beginAppearanceTransition(isAppearing, animated: animated)
+    }
+    
+    private func endAppearanceTransition(for viewController: UIViewController?) {
+        guard viewHasAppeared, let viewController = viewController, viewController.parent == self else { return }
+        viewController.endAppearanceTransition()
+    }
+
     private func layoutViews() {
         
         let viewWidth = self.view.bounds.width
@@ -518,8 +529,11 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.delegate?.em_pageViewController?(self, willStartScrollingFrom: startingViewController!, destinationViewController: destinationViewController)
         }
         
-        destinationViewController.beginAppearanceTransition(true, animated: self.transitionAnimated)
-        startingViewController?.beginAppearanceTransition(false, animated: self.transitionAnimated)
+        print("[EMPageViewController] willScroll\n\tfrom \(startingViewController ?? nil)\n\tto: \(destinationViewController.debugDescription)")
+        if viewHasAppeared {
+            beginAppearanceTransition(for: destinationViewController, isAppearing: true, animated: self.transitionAnimated)
+            beginAppearanceTransition(for: startingViewController, isAppearing: false, animated: self.transitionAnimated)
+        }
         self.addChildIfNeeded(destinationViewController)
     }
     

@@ -127,10 +127,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     /// If the data source is `nil`, gesture based scrolling will be disabled and all view controllers must be provided through `selectViewController:direction:animated:completion:`.
     ///
     /// - important: If you are using a data source, make sure you set `dataSource` before calling `selectViewController:direction:animated:completion:`.
-    open weak var dataSource: EMPageViewControllerDataSource?
+    @objc open weak var dataSource: EMPageViewControllerDataSource?
     
     /// The object that receives messages throughout the navigation process of the page view controller.
-    open weak var delegate: EMPageViewControllerDelegate?
+    @objc open weak var delegate: EMPageViewControllerDelegate?
     
     /// The direction scrolling navigation occurs
     open private(set) var navigationOrientation: EMPageViewControllerNavigationOrientation = .horizontal
@@ -156,16 +156,16 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /// The view controller before the selected view controller.
-    open private(set) var beforeViewController: UIViewController?
+    @objc open private(set) var beforeViewController: UIViewController?
     
     /// The currently selected view controller. Can be `nil` if no view controller is selected.
-    open private(set) var selectedViewController: UIViewController?
+    @objc open private(set) var selectedViewController: UIViewController?
     
     /// The view controller after the selected view controller.
-    open private(set) var afterViewController: UIViewController?
+    @objc open private(set) var afterViewController: UIViewController?
     
     /// Boolean that indicates whether the page controller is currently in the process of scrolling.
-    open private(set) var scrolling = false
+    @objc open private(set) var scrolling = false
     
     /// The direction the page controller is scrolling towards.
     open private(set) var navigationDirection: EMPageViewControllerNavigationDirection?
@@ -197,7 +197,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         - parameter direction: The direction of the navigation and animation, if applicable.
         - parameter completion: A block that's called after the transition is finished. The block parameter `transitionSuccessful` is `true` if the transition to the selected view controller was completed successfully.
     */
-    open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
+    @objc open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
         guard self.selectedViewController != viewController else { return }
         
         if (direction == .forward) {
@@ -214,14 +214,14 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         
     }
 
-    open func removeAllViewControllers() {
+    @objc open func removeAllViewControllers() {
         self.removeChildIfNeeded(beforeViewController, shouldEndAppearanceTransition: false)
         self.removeChildIfNeeded(selectedViewController, shouldEndAppearanceTransition: false)
         self.removeChildIfNeeded(afterViewController, shouldEndAppearanceTransition: false)
 
-        beforeViewController = nil
-        selectedViewController = nil
-        afterViewController = nil
+        self.beforeViewController = nil
+        self.selectedViewController = nil
+        self.afterViewController = nil
     }
     
     /**
@@ -324,7 +324,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     open override func viewWillAppear(_ animated: Bool) {
         print("[EMPageViewController] viewWillAppear")
         super.viewWillAppear(animated)
-        beginAppearanceTransition(for: selectedViewController, isAppearing: true, animated: animated)
+        self.beginAppearanceTransition(for: self.selectedViewController, isAppearing: true, animated: animated)
     }
 
      open override func viewDidAppear(_ animated: Bool) {
@@ -483,7 +483,7 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
         guard let viewController = viewController, viewController.parent == self else { return }
         viewController.beginAppearanceTransition(isAppearing, animated: animated)
     }
-    
+
     private func endAppearanceTransition(for viewController: UIViewController?) {
         guard self.viewHasAppeared, let viewController = viewController, viewController.parent == self else { return }
         viewController.endAppearanceTransition()

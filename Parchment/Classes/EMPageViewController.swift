@@ -156,13 +156,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     }()
     
     /// The view controller before the selected view controller.
-    private var beforeViewController: UIViewController?
+    open private(set) var beforeViewController: UIViewController?
     
     /// The currently selected view controller. Can be `nil` if no view controller is selected.
     open private(set) var selectedViewController: UIViewController?
     
     /// The view controller after the selected view controller.
-    private var afterViewController: UIViewController?
+    open private(set) var afterViewController: UIViewController?
     
     /// Boolean that indicates whether the page controller is currently in the process of scrolling.
     open private(set) var scrolling = false
@@ -534,7 +534,6 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
             self.delegate?.em_pageViewController?(self, willStartScrollingFrom: startingViewController!, destinationViewController: destinationViewController)
         }
         
-        print("[EMPageViewController] willScroll\n\tfrom \(startingViewController ?? nil)\n\tto: \(destinationViewController.debugDescription)")
         self.addChildIfNeeded(destinationViewController, shouldBeginAppearanceTransition: self.viewHasAppeared)
         if self.viewHasAppeared {
             self.beginAppearanceTransition(for: startingViewController, isAppearing: false, animated: self.transitionAnimated)

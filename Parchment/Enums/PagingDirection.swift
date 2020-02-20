@@ -1,5 +1,4 @@
 import Foundation
-import EMPageViewController
 
 public enum PagingDirection: Equatable {
   case reverse(sibling: Bool)

@@ -1,4 +1,5 @@
 import UIKit
+import EMPageViewController
 
 /// A view controller that lets you to page between views while
 /// showing menu items that scrolls along with the content.

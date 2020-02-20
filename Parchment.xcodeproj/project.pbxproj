@@ -79,7 +79,6 @@
 		3EA04A621C53BFF40054E5E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A601C53BFF40054E5E0 /* Main.storyboard */; };
 		3EA04A641C53BFF40054E5E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A631C53BFF40054E5E0 /* Assets.xcassets */; };
 		3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */; };
-		3EADD99F1CC65C4D003171CF /* EMPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EADD99E1CC65C4D003171CF /* EMPageViewController.swift */; };
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */; };
 		951E163720A21D3A0055E9D4 /* PagingViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842601F4251F90072038C /* PagingViewControllerSpec.swift */; };
 		9525C63D1FEE6DDC00A18EA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9525C63C1FEE6DDC00A18EA0 /* AppDelegate.swift */; };
@@ -176,6 +175,8 @@
 		95FB3AC821A1BE8C00EDAAD5 /* Parchment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; };
 		95FB3AC921A1BE8C00EDAAD5 /* Parchment.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3EA04A4B1C53BFE40054E5E0 /* Parchment.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		95FE3AF91FFEDBCE00E6F2AD /* PagingDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */; };
+		FC32D31623FEC2510038D0CD /* EMPageViewController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC32D31523FEC2510038D0CD /* EMPageViewController.framework */; };
+		FC32D31723FEC2510038D0CD /* EMPageViewController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC32D31523FEC2510038D0CD /* EMPageViewController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -376,6 +377,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FC32D31823FEC2510038D0CD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FC32D31723FEC2510038D0CD /* EMPageViewController.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -457,7 +469,6 @@
 		3EA04A661C53BFF40054E5E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3EA04A681C53BFF40054E5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EA04A821C53C3860054E5E0 /* Cartography.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cartography.framework; path = Carthage/Build/iOS/Cartography.framework; sourceTree = "<group>"; };
-		3EADD99E1CC65C4D003171CF /* EMPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EMPageViewController.swift; sourceTree = "<group>"; };
 		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesSpec.swift; sourceTree = "<group>"; };
 		9525C63A1FEE6DDC00A18EA0 /* NavigationBarExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationBarExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -556,6 +567,7 @@
 		95FB3AC121A19B2000EDAAD5 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		95FE3AF81FFEDBCE00E6F2AD /* PagingDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingDistance.swift; sourceTree = "<group>"; };
 		E9D1BE1D211E409400E86B72 /* PagingMenuItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuItemSource.swift; sourceTree = "<group>"; };
+		FC32D31523FEC2510038D0CD /* EMPageViewController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EMPageViewController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -604,6 +616,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC32D31623FEC2510038D0CD /* EMPageViewController.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -751,7 +764,6 @@
 		3E4090A31C88BD1700800E22 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				3EADD99E1CC65C4D003171CF /* EMPageViewController.swift */,
 				3E4090A91C88BDD100800E22 /* PagingBorderLayoutAttributes.swift */,
 				3E49C71F1C8F5C13006269DD /* PagingBorderView.swift */,
 				3E49C7201C8F5C13006269DD /* PagingCell.swift */,
@@ -907,6 +919,7 @@
 		3EA04A841C53C3960054E5E0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FC32D31523FEC2510038D0CD /* EMPageViewController.framework */,
 				3E73A8131C9A0AE40083C720 /* libInsightfulPager.a */,
 				3E504ED01C7466CD00AE1CE3 /* Nimble.framework */,
 				3E504ED11C7466CD00AE1CE3 /* Quick.framework */,
@@ -1141,6 +1154,7 @@
 				3EA04A471C53BFE40054E5E0 /* Frameworks */,
 				3EA04A481C53BFE40054E5E0 /* Headers */,
 				3EA04A491C53BFE40054E5E0 /* Resources */,
+				FC32D31823FEC2510038D0CD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1616,7 +1630,6 @@
 				95A52A151FF81F70002A2ED4 /* PagingLayout.swift in Sources */,
 				955444C21FC9CD19001EC26B /* PagingMenuTransition.swift in Sources */,
 				3E2AAD2E1CA86A320044AAA5 /* PagingViewControllerDelegate.swift in Sources */,
-				3EADD99F1CC65C4D003171CF /* EMPageViewController.swift in Sources */,
 				9548425D1F42486B0072038C /* PagingDiff.swift in Sources */,
 				3E40909D1C88BCC900800E22 /* PagingState.swift in Sources */,
 				954842591F42438E0072038C /* PagingInvalidationContext.swift in Sources */,
@@ -2196,7 +2209,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2249,7 +2262,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -2278,7 +2291,7 @@
 				);
 				INFOPLIST_FILE = Parchment/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.Parchment;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2305,7 +2318,7 @@
 				);
 				INFOPLIST_FILE = Parchment/Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.martinrechsteiner.Parchment;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -199,6 +199,10 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
     open func selectViewController(_ viewController: UIViewController, direction: EMPageViewControllerNavigationDirection, animated: Bool, completion: ((_ transitionSuccessful: Bool) -> Void)?) {
         
         if viewController == self.selectedViewController {
+            self.afterViewController = nil
+            self.loadAfterViewController(for: viewController)
+            self.beforeViewController = nil
+            self.loadBeforeViewController(for: viewController)
             return
         }
         

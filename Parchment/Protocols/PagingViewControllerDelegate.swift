@@ -3,7 +3,7 @@ import UIKit
 
 /// The `PagingViewControllerDelegate` protocol defines methods that
 /// can used to determine when the user navigates between view
-/// controllers, or to define the width of a given `PagingItem`.
+/// controllers.
 public protocol PagingViewControllerDelegate: class {
   
   /// Called whenever a scroll transition is in progress.
@@ -15,10 +15,10 @@ public protocol PagingViewControllerDelegate: class {
   /// - Parameter destinationViewController: The view controller for
   /// the upcoming paging item
   /// - Parameter progress: The progress of the scroll transition
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    isScrollingFromItem currentPagingItem: T,
-    toItem upcomingPagingItem: T?,
+  func pagingViewController(
+    _: PagingViewController,
+    isScrollingFromItem currentPagingItem: PagingItem,
+    toItem upcomingPagingItem: PagingItem?,
     startingViewController: UIViewController,
     destinationViewController: UIViewController?,
     progress: CGFloat)
@@ -30,9 +30,9 @@ public protocol PagingViewControllerDelegate: class {
   /// current paging item
   /// - Parameter destinationViewController: The view controller for
   /// the upcoming paging item
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    willScrollToItem pagingItem: T,
+  func pagingViewController(
+    _: PagingViewController,
+    willScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController,
     destinationViewController: UIViewController)
   
@@ -45,62 +45,40 @@ public protocol PagingViewControllerDelegate: class {
   /// the upcoming paging item
   /// - Parameter transitionSuccessful: Boolean that indicates whether
   /// the transition to the paging item was successful or not
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    didScrollToItem pagingItem: T,
+  func pagingViewController(
+    _ pagingViewController: PagingViewController,
+    didScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController?,
     destinationViewController: UIViewController,
     transitionSuccessful: Bool)
-  
-  /// Manually control the width for a given `PagingItem`. Parchment
-  /// does not support self-sizing cells, so you have to use this if
-  /// you have a cell that you want to size based on its content.
-  ///
-  /// - Parameter pagingViewController: The `PagingViewController`
-  /// instance
-  /// - Parameter pagingItem: The `PagingItem` instance
-  /// - Parameter isSelected: A boolean that indicates whether the
-  /// given `PagingItem` is selected
-  /// - Returns: The width for the `PagingItem` or nil
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    widthForPagingItem pagingItem: T,
-    isSelected: Bool) -> CGFloat?
 }
 
 public extension PagingViewControllerDelegate {
 
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    isScrollingFromItem currentPagingItem: T,
-    toItem upcomingPagingItem: T?,
+  func pagingViewController(
+    _: PagingViewController,
+    isScrollingFromItem currentPagingItem: PagingItem,
+    toItem upcomingPagingItem: PagingItem?,
     startingViewController: UIViewController,
     destinationViewController: UIViewController?,
     progress: CGFloat) {
     return
   }
   
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    willScrollToItem pagingItem: T,
+  func pagingViewController(
+    _ pagingViewController: PagingViewController,
+    willScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController,
     destinationViewController: UIViewController) {
     return
   }
   
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    didScrollToItem pagingItem: T,
+  func pagingViewController(
+    _ pagingViewController: PagingViewController,
+    didScrollToItem pagingItem: PagingItem,
     startingViewController: UIViewController?,
     destinationViewController: UIViewController,
     transitionSuccessful: Bool) {
     return
-  }
-  
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    widthForPagingItem pagingItem: T,
-    isSelected: Bool) -> CGFloat? {
-    return nil
   }
 }

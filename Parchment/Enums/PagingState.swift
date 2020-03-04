@@ -4,12 +4,12 @@ import UIKit
 /// The current state of the menu items. Indicates whether an item
 /// is currently selected or is scrolling to another item. Can be
 /// used to get the distance and progress of any ongoing transition.
-public enum PagingState<T: PagingItem>: Equatable where T: Equatable {
+public enum PagingState: Equatable {
   case empty
-  case selected(pagingItem: T)
+  case selected(pagingItem: PagingItem)
   case scrolling(
-    pagingItem: T,
-    upcomingPagingItem: T?,
+    pagingItem: PagingItem,
+    upcomingPagingItem: PagingItem?,
     progress: CGFloat,
     initialContentOffset: CGPoint,
     distance: CGFloat)
@@ -17,7 +17,7 @@ public enum PagingState<T: PagingItem>: Equatable where T: Equatable {
 
 public extension PagingState {
   
-  var currentPagingItem: T? {
+  var currentPagingItem: PagingItem? {
     switch self {
     case .empty:
       return nil
@@ -28,7 +28,7 @@ public extension PagingState {
     }
   }
   
-  var upcomingPagingItem: T? {
+  var upcomingPagingItem: PagingItem? {
     switch self {
     case .empty:
       return nil
@@ -57,7 +57,7 @@ public extension PagingState {
     }
   }
   
-  var visuallySelectedPagingItem: T? {
+  var visuallySelectedPagingItem: PagingItem? {
     if abs(progress) > 0.5 {
       return upcomingPagingItem ?? currentPagingItem
     } else {
@@ -67,23 +67,23 @@ public extension PagingState {
   
 }
 
-public func ==<T>(lhs: PagingState<T>, rhs: PagingState<T>) -> Bool {
+public func ==(lhs: PagingState, rhs: PagingState) -> Bool {
   switch (lhs, rhs) {
   case
     (let .scrolling(lhsCurrent, lhsUpcoming, lhsProgress, lhsOffset, lhsDistance),
      let .scrolling(rhsCurrent, rhsUpcoming, rhsProgress, rhsOffset, rhsDistance)):
-    if lhsCurrent == rhsCurrent &&
+    if lhsCurrent.isEqual(to: rhsCurrent) &&
       lhsProgress == rhsProgress &&
       lhsOffset == rhsOffset &&
       lhsDistance == rhsDistance {
-      if let lhsUpcoming = lhsUpcoming, let rhsUpcoming = rhsUpcoming, lhsUpcoming == rhsUpcoming {
+      if let lhsUpcoming = lhsUpcoming, let rhsUpcoming = rhsUpcoming, lhsUpcoming.isEqual(to: rhsUpcoming) {
         return true
       } else if lhsUpcoming == nil && rhsUpcoming == nil {
         return true
       }
     }
     return false
-  case (let .selected(a), let .selected(b)) where a == b:
+  case (let .selected(a), let .selected(b)) where a.isEqual(to: b):
     return true
   case (.empty, .empty):
     return true

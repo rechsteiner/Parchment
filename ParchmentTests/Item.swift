@@ -1,11 +1,11 @@
 import Foundation
 @testable import Parchment
 
-struct Item: PagingItem, Hashable, Comparable {
+struct Item: PagingItem, Equatable, Comparable {
   let index: Int
   
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(index)
+  var identifier: Int {
+    return index
   }
 }
 

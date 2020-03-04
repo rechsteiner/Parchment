@@ -12,15 +12,7 @@ struct ImageItem: PagingItem, Hashable, Comparable {
   let headerImage: UIImage
   let images: [UIImage]
   
-  var hashValue: Int {
-    return index.hashValue &+ title.hashValue
-  }
-  
-  static func ==(lhs: ImageItem, rhs: ImageItem) -> Bool {
-    return lhs.index == rhs.index && lhs.title == rhs.title
-  }
-  
-  static func <(lhs: ImageItem, rhs: ImageItem) -> Bool {
+  static func < (lhs: ImageItem, rhs: ImageItem) -> Bool {
     return lhs.index < rhs.index
   }
 }
@@ -55,8 +47,7 @@ class CustomPagingView: PagingView {
 
 // Create a custom paging view controller and override the view with
 // our own custom subclass.
-class CustomPagingViewController: PagingViewController<ImageItem> {
-  
+class CustomPagingViewController: PagingViewController {
   override func loadView() {
     view = CustomPagingView(
       options: options,
@@ -78,7 +69,8 @@ class ViewController: UIViewController {
         UIImage(named: "green-2")!,
         UIImage(named: "green-3")!,
         UIImage(named: "green-4")!,
-        ]),
+        ]
+    ),
     ImageItem(
       index: 1,
       title: "Food",
@@ -88,7 +80,8 @@ class ViewController: UIViewController {
         UIImage(named: "food-2")!,
         UIImage(named: "food-3")!,
         UIImage(named: "food-4")!,
-        ]),
+        ]
+    ),
     ImageItem(
       index: 2,
       title: "Succulents",
@@ -98,7 +91,8 @@ class ViewController: UIViewController {
         UIImage(named: "succulents-2")!,
         UIImage(named: "succulents-3")!,
         UIImage(named: "succulents-4")!,
-        ]),
+        ]
+    ),
     ImageItem(
       index: 3,
       title: "City",
@@ -108,7 +102,8 @@ class ViewController: UIViewController {
         UIImage(named: "city-2")!,
         UIImage(named: "city-1")!,
         UIImage(named: "city-4")!,
-        ]),
+        ]
+    ),
     ImageItem(
       index: 4,
       title: "Scenic",
@@ -118,7 +113,8 @@ class ViewController: UIViewController {
         UIImage(named: "scenic-2")!,
         UIImage(named: "scenic-3")!,
         UIImage(named: "scenic-4")!,
-        ]),
+        ]
+    ),
     ImageItem(
       index: 5,
       title: "Coffee",
@@ -128,8 +124,9 @@ class ViewController: UIViewController {
         UIImage(named: "coffee-2")!,
         UIImage(named: "coffee-3")!,
         UIImage(named: "coffee-4")!,
-        ]),
-    ]
+        ]
+    )
+  ]
   
   // Create our custom paging view controller.
   private let pagingViewController = CustomPagingViewController()
@@ -147,7 +144,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    pagingViewController.menuItemSource = .class(type: ImagePagingCell.self)
+    pagingViewController.register(ImagePagingCell.self, for: ImageItem.self)
     pagingViewController.menuItemSize = .fixed(width: menuItemSize.width, height: menuItemSize.height)
     pagingViewController.menuItemSpacing = 8
     pagingViewController.menuInsets = menuInsets
@@ -213,7 +210,7 @@ class ViewController: UIViewController {
 
 extension ViewController: PagingViewControllerDataSource {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     let viewController = ImagesViewController(
       images: items[index].images,
       options: pagingViewController.options
@@ -231,11 +228,11 @@ extension ViewController: PagingViewControllerDataSource {
     return viewController
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return items[index] as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    return items[index]
   }
   
-  func numberOfViewControllers<T>(in: PagingViewController<T>) -> Int{
+  func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return items.count
   }
   
@@ -254,7 +251,7 @@ extension ViewController: ImagesViewControllerDelegate {
 
 extension ViewController: PagingViewControllerDelegate {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, isScrollingFromItem currentPagingItem: T, toItem upcomingPagingItem: T?, startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
+  func pagingViewController(_: PagingViewController, isScrollingFromItem currentPagingItem: PagingItem, toItem upcomingPagingItem: PagingItem?, startingViewController: UIViewController, destinationViewController: UIViewController?, progress: CGFloat) {
     guard let destinationViewController = destinationViewController as? ImagesViewController else { return }
     guard let startingViewController = startingViewController as? ImagesViewController else { return }
     

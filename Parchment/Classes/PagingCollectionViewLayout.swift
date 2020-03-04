@@ -15,19 +15,27 @@ import UIKit
 /// `PagingItem`. You can customize their layout attributes by
 /// updating the `indicatorLayoutAttributes` and
 /// `borderLayoutAttributes` properties.
-open class PagingCollectionViewLayout<T: PagingItem>:
-  UICollectionViewLayout, PagingLayout where T: Hashable & Comparable {
+open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
   
   // MARK: Public Properties
   
   /// An instance that stores all the customization that is applied
   /// to the `PagingViewController`.
-  public let options: PagingOptions
+  public var options = PagingOptions() {
+    didSet {
+      optionsChanged(oldValue: oldValue)
+    }
+  }
   
   /// The current state of the menu items. Indicates whether an item
   /// is currently selected or is scrolling to another item. Can be
   /// used to get the distance and progress of any ongoing transition.
-  public var state: PagingState<T> = .empty
+  public var state: PagingState = .empty
+  
+  /// The `PagingItem`'s that are currently visible in the collection
+  /// view. The items in this array are not necessarily the same as
+  /// the `visibleCells` property on `UICollectionView`.
+  public var visibleItems = PagingItems(items: [])
   
   /// A dictionary containing all the layout attributes for a given
   /// `IndexPath`. This will be generated in the `prepare()` call when
@@ -46,11 +54,6 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   /// in a collection view layout based on the invalidation context.
   public var invalidationState: InvalidationState = .everything
   
-  /// The `PagingItem`'s that are currently visible in the collection
-  /// view. The items in this array are not necessarily the same as
-  /// the `visibleCells` property on `UICollectionView`.
-  public var visibleItems: PagingItems<T>
-  
   open override var collectionViewContentSize: CGSize {
     return contentSize
   }
@@ -59,10 +62,21 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     return PagingCellLayoutAttributes.self
   }
   
+  // MARK: Initializers
+  
+  public override required init() {
+    super.init()
+    configure()
+  }
+  
+  public required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    configure()
+  }
+  
   // MARK: Internal Properties
   
-  var sizeCache: PagingSizeCache<T>?
-  var contentInsets: UIEdgeInsets = .zero
+  internal var sizeCache: PagingSizeCache?
   
   // MARK: Private Properties
   
@@ -90,30 +104,10 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     }
   }
   
+  private(set) var contentInsets: UIEdgeInsets = .zero
   private var contentSize: CGSize = .zero
   private let PagingIndicatorKind = "PagingIndicatorKind"
   private let PagingBorderKind = "PagingBorderKind"
-
-  // MARK: Initializers
-  
-  /// Creates an instance of `PagingCollectionViewLayout`
-  ///
-  /// - Parameter options: The `PagingOptions` instance created by
-  /// the `PagingViewController`
-  required public init(options: PagingOptions) {
-    self.options = options
-    self.visibleItems = PagingItems(items: [])
-    super.init()
-  }
-  
-  /// Creates an instance of `PagingCollectionViewLayout`
-  ///
-  /// - Parameter coder: An unarchiver object.
-  public required init?(coder: NSCoder) {
-    self.options = PagingOptions()
-    self.visibleItems = PagingItems(items: [])
-    super.init(coder: coder)
-  }
   
   // MARK: Public Methods
   
@@ -194,16 +188,47 @@ open class PagingCollectionViewLayout<T: PagingItem>:
     
     return layoutAttributes
   }
+
+  // MARK: Private Methods
   
-  func registerIndicatorClass() {
+  private func optionsChanged(oldValue: PagingOptions) {
+    var shouldInvalidateLayout: Bool = false
+    
+    if options.borderClass != oldValue.borderClass {
+      registerBorderClass()
+      shouldInvalidateLayout = true
+    }
+    
+    if options.indicatorClass != oldValue.indicatorClass {
+      registerIndicatorClass()
+      shouldInvalidateLayout = true
+    }
+    
+    if options.borderColor != oldValue.borderColor {
+      shouldInvalidateLayout = true
+    }
+    
+    if options.indicatorColor != oldValue.indicatorColor {
+      shouldInvalidateLayout = true
+    }
+    
+    if shouldInvalidateLayout {
+      invalidateLayout()
+    }
+  }
+  
+  private func configure() {
+    registerBorderClass()
+    registerIndicatorClass()
+  }
+  
+  private func registerIndicatorClass() {
     register(options.indicatorClass, forDecorationViewOfKind: PagingIndicatorKind)
   }
   
-  func registerBorderClass() {
+  private func registerBorderClass() {
     register(options.borderClass, forDecorationViewOfKind: PagingBorderKind)
   }
-
-  // MARK: Private Methods
   
   private func createLayoutAttributes() {
     guard let sizeCache = sizeCache else { return }
@@ -224,9 +249,9 @@ open class PagingCollectionViewLayout<T: PagingItem>:
         var width = sizeCache.itemWidth(for: pagingItem)
         let selectedWidth = sizeCache.itemWidthSelected(for: pagingItem)
         
-        if state.currentPagingItem == pagingItem {
+        if let currentPagingItem = state.currentPagingItem, currentPagingItem.isEqual(to: pagingItem) {
           width = tween(from: selectedWidth, to: width, progress: abs(state.progress))
-        } else if state.upcomingPagingItem == pagingItem {
+        } else if let upcomingPagingItem = state.upcomingPagingItem, upcomingPagingItem.isEqual(to: pagingItem) {
           width = tween(from: width, to: selectedWidth, progress: abs(state.progress))
         }
         
@@ -371,7 +396,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let first = visibleItems.items.first {
-      if currentPagingItem < first {
+      if currentPagingItem.isBefore(item: first) {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(-1),
           insets: indicatorInsetsForIndex(-1),
@@ -384,7 +409,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
   private func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
     guard let currentPagingItem = state.currentPagingItem else { return nil }
     if let last = visibleItems.items.last {
-      if currentPagingItem > last {
+      if last.isBefore(item: currentPagingItem) {
         return PagingIndicatorMetric(
           frame: indicatorFrameForIndex(visibleItems.items.count),
           insets: indicatorInsetsForIndex(visibleItems.items.count),
@@ -452,7 +477,7 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       let frame = frameForIndex(0)
       return frame.offsetBy(dx: -frame.width, dy: 0)
     } else if index > range.upperBound - 1 {
-      let frame = frameForIndex(visibleItems.itemsCache.count - 1)
+      let frame = frameForIndex(visibleItems.items.count - 1)
       return frame.offsetBy(dx: frame.width, dy: 0)
     }
     
@@ -469,13 +494,14 @@ open class PagingCollectionViewLayout<T: PagingItem>:
       y: attributes.center.y - attributes.bounds.midY,
       width: attributes.bounds.width,
       height: attributes.bounds.height)
-
     if sizeCache.implementsWidthDelegate {
       let indexPath = IndexPath(item: index, section: 0)
       let pagingItem = visibleItems.pagingItem(for: indexPath)
 
-      if state.upcomingPagingItem == pagingItem || state.currentPagingItem == pagingItem  {
-        frame.size.width = sizeCache.itemWidthSelected(for: pagingItem)
+      if let upcomingPagingItem = state.upcomingPagingItem, let currentPagingItem = state.currentPagingItem {
+        if upcomingPagingItem.isEqual(to: pagingItem) || currentPagingItem.isEqual(to: pagingItem)  {
+          frame.size.width = sizeCache.itemWidthSelected(for: pagingItem)
+        }
       }
     }
 

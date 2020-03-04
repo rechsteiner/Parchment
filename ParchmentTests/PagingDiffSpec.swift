@@ -10,8 +10,8 @@ class PagingDiffSpec: QuickSpec {
     describe("added") {
       
       it("ignores added items after center") {
-        let from = PagingItems<Item>(items: [Item(index: 0)])
-        let to = PagingItems<Item>(items: [Item(index: 0), Item(index: 1)])
+        let from = PagingItems(items: [Item(index: 0)])
+        let to = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let diff = PagingDiff(from: from, to: to)
         
         expect(diff.added()).to(beEmpty())
@@ -19,8 +19,8 @@ class PagingDiffSpec: QuickSpec {
       }
       
       it("detects added items before center") {
-        let from = PagingItems<Item>(items: [Item(index: 1)])
-        let to = PagingItems<Item>(items: [Item(index: 0), Item(index: 1)])
+        let from = PagingItems(items: [Item(index: 1)])
+        let to = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let diff = PagingDiff(from: from, to: to)
         let added = diff.added()
         let removed = diff.removed()
@@ -33,7 +33,7 @@ class PagingDiffSpec: QuickSpec {
       // TODO: Reduce these tests to a minimal test case and update
       // the descriptions.
       it("passes scenario #1") {
-        let from = PagingItems<Item>(items: [
+        let from = PagingItems(items: [
           Item(index: 16),
           Item(index: 17),
           Item(index: 18),
@@ -51,7 +51,7 @@ class PagingDiffSpec: QuickSpec {
           Item(index: 30)
         ])
         
-        let to = PagingItems<Item>(items: [
+        let to = PagingItems(items: [
           Item(index: 9),
           Item(index: 10),
           Item(index: 11),
@@ -85,7 +85,7 @@ class PagingDiffSpec: QuickSpec {
       }
       
       it("passes scenario #2") {
-        let from = PagingItems<Item>(items: [
+        let from = PagingItems(items: [
           Item(index: 0),
           Item(index: 1),
           Item(index: 2),
@@ -97,7 +97,7 @@ class PagingDiffSpec: QuickSpec {
           Item(index: 8)
         ])
         
-        let to = PagingItems<Item>(items: [
+        let to = PagingItems(items: [
           Item(index: 4),
           Item(index: 5),
           Item(index: 6),
@@ -121,14 +121,14 @@ class PagingDiffSpec: QuickSpec {
       
       it("passes scenario #3") {
         
-        let from = PagingItems<Item>(items: [
+        let from = PagingItems(items: [
           Item(index: 1),
           Item(index: 2),
           Item(index: 10),
           Item(index: 11)
         ])
         
-        let to = PagingItems<Item>(items: [
+        let to = PagingItems(items: [
           Item(index: 2),
           Item(index: 3)
         ])
@@ -147,8 +147,8 @@ class PagingDiffSpec: QuickSpec {
     describe("removed") {
       
       it("ignores removed items after center") {
-        let from = PagingItems<Item>(items: [Item(index: 0), Item(index: 1)])
-        let to = PagingItems<Item>(items: [Item(index: 0)])
+        let from = PagingItems(items: [Item(index: 0), Item(index: 1)])
+        let to = PagingItems(items: [Item(index: 0)])
         let diff = PagingDiff(from: from, to: to);
         
         expect(diff.removed()).to(beEmpty())
@@ -156,8 +156,8 @@ class PagingDiffSpec: QuickSpec {
       }
       
       it("detects removed items before center") {
-        let from = PagingItems<Item>(items: [Item(index: 0), Item(index: 1)])
-        let to = PagingItems<Item>(items: [Item(index: 1)])
+        let from = PagingItems(items: [Item(index: 0), Item(index: 1)])
+        let to = PagingItems(items: [Item(index: 1)])
         let diff = PagingDiff(from: from, to: to);
         let removed = diff.removed()
         let added = diff.added()

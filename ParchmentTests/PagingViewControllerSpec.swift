@@ -6,37 +6,32 @@ import UIKit
 
 class DataSource: PagingViewControllerInfiniteDataSource {
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem: T) -> T? {
-    guard let item = pagingItemAfterPagingItem as? Item else { return nil }
-    
-    if (item.index < 50) {
-      return Item(index: item.index + 1) as? T
+  func pagingViewController(_: PagingViewController, itemAfter: PagingItem) -> PagingItem? {
+    guard let item = itemAfter as? Item else { return nil }
+    if item.index < 50 {
+      return Item(index: item.index + 1)
     }
     return nil
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem: T) -> T? {
-    guard let item = pagingItemBeforePagingItem as? Item else { return nil }
-    
-    if (item.index > 0) {
-      return Item(index: item.index - 1) as? T
+  func pagingViewController(_: PagingViewController, itemBefore: PagingItem) -> PagingItem? {
+    guard let item = itemBefore as? Item else { return nil }
+    if item.index > 0 {
+      return Item(index: item.index - 1)
     }
     return nil
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem: T) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
     return UIViewController()
   }
   
 }
 
-class Delegate: PagingViewControllerDelegate {
+class SizeDelegate: PagingViewControllerSizeDelegate {
   
-  func pagingViewController<T>(
-    _ pagingViewController: PagingViewController<T>,
-    widthForPagingItem pagingItem: T,
-    isSelected: Bool) -> CGFloat? {
-    guard let item = pagingItem as? PagingIndexItem else { return nil }
+  func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
+    guard let item = pagingItem as? PagingIndexItem else { return 0 }
     if item.index == 0 {
       return 100
     } else {
@@ -46,12 +41,7 @@ class Delegate: PagingViewControllerDelegate {
   
 }
 
-class DeinitPagingViewController: PagingViewController<PagingIndexItem> {
-  var deinitCalled: (() -> Void)?
-  deinit { deinitCalled?() }
-}
-
-class DeinitFixedPagingViewController: FixedPagingViewController {
+class DeinitPagingViewController: PagingViewController {
   var deinitCalled: (() -> Void)?
   deinit { deinitCalled?() }
 }
@@ -60,16 +50,16 @@ class ReloadingDataSource: PagingViewControllerDataSource {
   var items: [PagingIndexItem] = []
   var viewControllers: [UIViewController] = []
   
-  func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
+  func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
     return items.count
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
+  func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
     return viewControllers[index]
   }
   
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-    return items[index] as! T
+  func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+    return items[index]
   }
 }
 
@@ -82,7 +72,7 @@ class PagingViewControllerSpec: QuickSpec {
       describe("reloading menu") {
         
         let dataSource = ReloadingDataSource()
-        var pagingViewController: PagingViewController<PagingIndexItem>!
+        var pagingViewController: PagingViewController!
         var viewController0: UIViewController!
         var viewController1: UIViewController!
         
@@ -148,8 +138,8 @@ class PagingViewControllerSpec: QuickSpec {
       describe("reloading data") {
         
         let dataSource = ReloadingDataSource()
-        var delegate: Delegate!
-        var pagingViewController: PagingViewController<PagingIndexItem>!
+        var delegate: SizeDelegate!
+        var pagingViewController: PagingViewController!
         
         context("has items before reloading") {
           var viewController0: UIViewController!
@@ -311,8 +301,8 @@ class PagingViewControllerSpec: QuickSpec {
           describe("width delegate") {
             
             beforeEach {
-              delegate = Delegate()
-              pagingViewController.delegate = delegate
+              delegate = SizeDelegate()
+              pagingViewController.sizeDelegate = delegate
             }
             
             it("uses the width delegate after reloading data") {
@@ -346,10 +336,11 @@ class PagingViewControllerSpec: QuickSpec {
       describe("selecting items") {
         
         let dataSource = DataSource()
-        var viewController: PagingViewController<Item>!
+        var viewController: PagingViewController!
         
         beforeEach {
           viewController = PagingViewController()
+          viewController.register(PagingTitleCell.self, for: Item.self)
           viewController.menuItemSize = .fixed(width: 100, height: 50)
           viewController.infiniteDataSource = dataSource
           
@@ -394,18 +385,6 @@ class PagingViewControllerSpec: QuickSpec {
           }
         }
         
-        it("deinits FixedPagingViewController") {
-          let viewController = UIViewController()
-          var instance: DeinitFixedPagingViewController? = DeinitFixedPagingViewController(viewControllers: [viewController])
-          waitUntil { done in
-            instance?.deinitCalled = {
-              done()
-            }
-            DispatchQueue.global(qos: .background).async {
-              instance = nil
-            }
-          }
-        }
       }
     }
   }

@@ -27,7 +27,7 @@ open class PagingTitleCell: PagingCell {
   }
   
   open override func setPagingItem(_ pagingItem: PagingItem, selected: Bool, options: PagingOptions) {
-    if let titleItem = pagingItem as? PagingTitleItem {
+    if let titleItem = pagingItem as? PagingIndexItem {
       viewModel = PagingTitleCellViewModel(
         title: titleItem.title,
         selected: selected,

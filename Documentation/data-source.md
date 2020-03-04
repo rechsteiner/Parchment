@@ -23,28 +23,26 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let pagingViewController = PagingViewController<PagingIndexItem>()
+        let pagingViewController = PagingViewController()
         pagingViewController.dataSource = self
     }
 }
 ```
 
-Here we need to specify the generic `PagingItem` type. `PagingItem` is just an empty protocol that is used to generate the menu items without having to allocate the view controllers. The only requirement is that the type conforms to `Hashable` and `Comparable`. Since we’re just going to display a title in the menu items we’re just using  `PagingIndexItem`, which is one of the default types provided by Parchment. 
-
-In our data source implementation we set the number of view controllers equal to the number of items in our cities array, and return an instance of `PagingIndexItem` with the title of each city:
+In our data source implementation we set the number of view controllers equal to the number of items in our cities array, and return an instance of `PagingTitleItem` with the title of each city:
 
 ```Swift
 extension ViewController: PagingViewControllerDataSource {
-    func numberOfViewControllers<T>(in pagingViewController: PagingViewController<T>) -> Int {
+    func numberOfViewControllers(in pagingViewController: PagingViewController) -> Int {
         return cities.count
     }
 
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemForIndex index: Int) -> T {
-        return PagingIndexItem(index: index, title: cities[index]) as! T
+    func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
+        return CityViewController(city: cities[index])
     }
 
-    func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForIndex index: Int) -> UIViewController {
-        return CityViewController(city: cities[index])
+    func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
+        return PagingIndexItem(index: index, title: cities[index])
     }
 }
 ```

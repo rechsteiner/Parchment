@@ -10,7 +10,7 @@ class PagingIndicatorLayoutAttributesSpec: QuickSpec {
     describe("PagingIndicatorLayoutAttributes") {
       
       let layoutAttributes = PagingIndicatorLayoutAttributes()
-      let options = PagingOptions()
+      var options = PagingOptions()
       
       beforeEach {
         options.font = UIFont.systemFont(ofSize: 15)

@@ -13,8 +13,14 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let viewControllers = (0...10).map { IndexViewController(index: $0) }
-    let pagingViewController = FixedPagingViewController(viewControllers: viewControllers)
+    let viewControllers = [
+      IndexViewController(index: 0),
+      IndexViewController(index: 1),
+      IndexViewController(index: 2),
+      IndexViewController(index: 3)
+    ]
+    
+    let pagingViewController = PagingViewController(viewControllers: viewControllers)
     
     // Make sure you add the PagingViewController as a child view
     // controller and constrain it to the edges of the view.

@@ -1,30 +1,30 @@
 import Foundation
 
-struct PagingDiff<T: PagingItem> where T: Hashable & Comparable {
+struct PagingDiff {
   
-  private let from: PagingItems<T>
-  private let to: PagingItems<T>
-  private var fromCache: [Int: T]
-  private var toCache: [Int: T]
-  private var lastMatchingItem: T?
+  private let from: PagingItems
+  private let to: PagingItems
+  private var fromCache: [Int: PagingItem]
+  private var toCache: [Int: PagingItem]
+  private var lastMatchingItem: PagingItem?
   
-  init(from: PagingItems<T>, to: PagingItems<T>) {
+  init(from: PagingItems, to: PagingItems) {
     self.from = from
     self.to = to
     self.fromCache = [:]
     self.toCache = [:]
     
     for item in from.items {
-      fromCache[item.hashValue] = item
+      fromCache[item.identifier] = item
     }
     
     for item in to.items {
-      toCache[item.hashValue] = item
+      toCache[item.identifier] = item
     }
     
     for toItem in to.items {
       for fromItem in from.items {
-        if toItem == fromItem {
+        if toItem.isEqual(to: fromItem) {
           lastMatchingItem = toItem
           break
         }
@@ -68,10 +68,10 @@ struct PagingDiff<T: PagingItem> where T: Hashable & Comparable {
     return items
   }
   
-  private func diff(visibleItems: PagingItems<T>, cache: [Int: T]) -> [IndexPath] {
+  private func diff(visibleItems: PagingItems, cache: [Int: PagingItem]) -> [IndexPath] {
     #if swift(>=4.1)
       return visibleItems.items.compactMap { item in
-        if cache[item.hashValue] == nil {
+        if cache[item.identifier] == nil {
           return visibleItems.indexPath(for: item)
         }
         return nil

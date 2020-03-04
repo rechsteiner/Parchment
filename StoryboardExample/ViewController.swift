@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     // Initialize a FixedPagingViewController and pass
     // in the view controllers.
-    let pagingViewController = FixedPagingViewController(viewControllers: [
+    let pagingViewController = PagingViewController(viewControllers: [
       firstViewController,
       secondViewController
     ])

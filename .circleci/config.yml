@@ -2,7 +2,7 @@ version: 2
 jobs:
   build-and-test:
     macos:
-      xcode: "10.3.0"
+      xcode: "11.1.0"
     steps:
       - checkout
       - run:
@@ -10,7 +10,7 @@ jobs:
           command: carthage bootstrap --use-ssh --platform ios
       - run:
           name: Run Tests
-          command: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone X,OS=12.4' test
+          command: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 11,OS=13.1' test
           
 workflows:
   version: 2

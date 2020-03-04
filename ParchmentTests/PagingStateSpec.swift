@@ -18,7 +18,7 @@ class PagingStateSpec: QuickSpec {
             progress: 0,
             initialContentOffset: .zero,
             distance: 0)
-          expect(state.currentPagingItem).to(equal(Item(index: 0)))
+          expect(state.currentPagingItem as! Item?).to(equal(Item(index: 0)))
         }
         
         it("returns the correct progress") {
@@ -40,7 +40,7 @@ class PagingStateSpec: QuickSpec {
               progress: 0,
               initialContentOffset: .zero,
               distance: 0)
-            expect(state.upcomingPagingItem).to(equal(Item(index: 1)))
+            expect(state.upcomingPagingItem as! Item?).to(equal(Item(index: 1)))
           }
           
           describe("visuallySelectedPagingItem") {
@@ -53,7 +53,7 @@ class PagingStateSpec: QuickSpec {
                   progress: 0.6,
                   initialContentOffset: .zero,
                   distance: 0)
-                expect(state.visuallySelectedPagingItem).to(equal(Item(index: 1)))
+                expect(state.visuallySelectedPagingItem as! Item?).to(equal(Item(index: 1)))
               }
             }
             
@@ -65,7 +65,7 @@ class PagingStateSpec: QuickSpec {
                   progress: 0.3,
                   initialContentOffset: .zero,
                   distance: 0)
-                expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
+                expect(state.visuallySelectedPagingItem as! Item?).to(equal(Item(index: 0)))
               }
             }
             
@@ -95,7 +95,7 @@ class PagingStateSpec: QuickSpec {
                   progress: 0.6,
                   initialContentOffset: .zero,
                   distance: 0)
-                expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
+                expect(state.visuallySelectedPagingItem as! Item?).to(equal(Item(index: 0)))
               }
             }
             
@@ -107,7 +107,7 @@ class PagingStateSpec: QuickSpec {
                   progress: 0.3,
                   initialContentOffset: .zero,
                   distance: 0)
-                expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
+                expect(state.visuallySelectedPagingItem as! Item?).to(equal(Item(index: 0)))
               }
             }
             
@@ -121,7 +121,7 @@ class PagingStateSpec: QuickSpec {
         let state: PagingState = .selected(pagingItem: Item(index: 0))
         
         it("returns the current paging item") {
-          expect(state.currentPagingItem).to(equal(Item(index: 0)))
+          expect(state.currentPagingItem as! Item?).to(equal(Item(index: 0)))
         }
         
         it("returns nil for the upcoming paging item") {
@@ -133,7 +133,7 @@ class PagingStateSpec: QuickSpec {
         }
         
         it("returns the current paging item as the visually selected item") {
-          expect(state.visuallySelectedPagingItem).to(equal(Item(index: 0)))
+          expect(state.visuallySelectedPagingItem as! Item?).to(equal(Item(index: 0)))
         }
         
       }

@@ -17,7 +17,7 @@ class CustomPagingView: PagingView {
 
 // Create a custom paging view controller and override the view with
 // our own custom subclass.
-class CustomPagingViewController: FixedPagingViewController {
+class CustomPagingViewController: PagingViewController {
   override func loadView() {
     view = CustomPagingView(
       options: options,

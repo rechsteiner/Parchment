@@ -1,8 +1,8 @@
 import Foundation
 
-public enum PagingDirection {
-  case reverse
-  case forward
+public enum PagingDirection: Equatable {
+  case reverse(sibling: Bool)
+  case forward(sibling: Bool)
   case none
 }
 

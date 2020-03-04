@@ -6,64 +6,53 @@ If you’re creating something like a calendar, the number of view controllers c
 
 Let’s look at how you can create your own calendar data source. This is what we want to achieve:
 
-![](https://s3-us-west-1.amazonaws.com/parchment-swift/parchment-calendar.gif "Calendar Example")
+![](https://rechsteiner-parchment.s3.eu-central-1.amazonaws.com/parchment-calendar.gif "Calendar Example")
 
 The first thing we need to do is create our own `PagingItem` to hold our dates. `PagingItem` is just an empty protocol that is used to generate menu items for all the view controllers, without having to actually allocate them before they are needed. You can store whatever data that makes the most sense for your application, the only requirement is that it needs to conform to `Hashable` and `Comparable`.
 
 ```Swift
 struct CalendarItem: PagingItem, Hashable, Comparable {
-  let date: Date
+    let date: Date
   
-  init(date: Date) {
-    self.date = date
-  }
-  
-  var hashValue: Int {
-    return date.hashValue
-  }
-  
-  static func ==(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-    return lhs.date == rhs.date
-  }
-  
-  static func <(lhs: CalendarItem, rhs: CalendarItem) -> Bool {
-    return lhs.date < rhs.date
-  }
+    static func < (lhs: CalendarItem, rhs: CalendarItem) -> Bool {
+        return lhs.date < rhs.date
+    }
 }
 ```
 
-Now that we have our custom `PagingItem`, we can create our `PagingViewController` instance where we specify `CalendarItem` as the generic type: 
+Now that we have our custom `PagingItem`, we can create our `PagingViewController` instance:
 
 ```Swift
 class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        let pagingViewController = PagingViewController<CalendarItem>()
+        let pagingViewController = PagingViewController()
     }
+}
 ```
 
 Then we need to conform to the `PagingViewControllerInfiniteDataSource` protocol:
 
 ```Swift
 extension ViewController: PagingViewControllerInfiniteDataSource {
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, viewControllerForPagingItem pagingItem: T) -> UIViewController {
+  func pagingViewController(_: PagingViewController, itemAfter pagingItem: PagingItem) -> PagingItem? {
+    let calendarItem = pagingItem as! CalendarItem
+    return CalendarItem(date: calendarItem.date.addingTimeInterval(86400))
+  }
+  
+  func pagingViewController(_: PagingViewController, itemBefore pagingItem: PagingItem) -> PagingItem? {
+    let calendarItem = pagingItem as! CalendarItem
+    return CalendarItem(date: calendarItem.date.addingTimeInterval(-86400))
+  }
+  
+  func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
     let calendarItem = pagingItem as! CalendarItem
     return CalendarViewController(date: calendarItem.date)
   }
-  
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemBeforePagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.addingTimeInterval(-86400)) as? T
-  }
-  
-  func pagingViewController<T>(_ pagingViewController: PagingViewController<T>, pagingItemAfterPagingItem pagingItem: T) -> T? {
-    let calendarItem = pagingItem as! CalendarItem
-    return CalendarItem(date: calendarItem.date.addingTimeInterval(86400)) as? T
-  } 
 }
 ```
   
-Every time `pagingItemBeforePagingItem:` or `pagingItemAfterPagingItem:` is called, we either subtract or append the time interval equal to one day. This means our paging view controller will show one menu item for each day.
+Every time `itemBefore:` or `itemAfter:` is called, we either subtract or append the time interval equal to one day. This means our paging view controller will show one menu item for each day.
 
 We then set our `infiniteDataSource` property and select our initial item. In this example, we want the current date to be the initially selected:
 

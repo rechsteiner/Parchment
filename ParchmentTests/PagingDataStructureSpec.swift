@@ -9,7 +9,7 @@ class PagingDataSpec: QuickSpec {
     
     describe("PagingData") {
       
-      var visibleItems: PagingItems<Item>!
+      var visibleItems: PagingItems!
       
       beforeEach {
         visibleItems = PagingItems(items: [
@@ -36,7 +36,7 @@ class PagingDataSpec: QuickSpec {
       describe("pagingItemForIndexPath:") {
         it("returns the paging item for a given index path") {
           let indexPath = IndexPath(item: 0, section: 0)
-          let pagingItem = visibleItems.pagingItem(for: indexPath)
+          let pagingItem = visibleItems.pagingItem(for: indexPath) as! Item
           expect(pagingItem).to(equal(Item(index: 0)))
         }
       }
@@ -50,7 +50,7 @@ class PagingDataSpec: QuickSpec {
               let currentPagingItem = Item(index: 0)
               let upcomingPagingItem = Item(index: 1)
               let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
-              expect(direction).to(equal(PagingDirection.forward))
+              expect(direction).to(equal(PagingDirection.forward(sibling: true)))
             }
           }
           
@@ -59,7 +59,7 @@ class PagingDataSpec: QuickSpec {
               let currentPagingItem = Item(index: 1)
               let upcomingPagingItem = Item(index: 0)
               let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
-              expect(direction).to(equal(PagingDirection.reverse))
+              expect(direction).to(equal(PagingDirection.reverse(sibling: true)))
             }
           }
           

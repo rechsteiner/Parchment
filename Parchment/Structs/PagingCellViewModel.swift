@@ -10,6 +10,7 @@ struct PagingTitleCellViewModel {
   let backgroundColor: UIColor
   let selectedBackgroundColor: UIColor
   let selected: Bool
+  let menuItemSize: PagingMenuItemSize
   
   init(title: String?, selected: Bool, options: PagingOptions) {
     self.title = title
@@ -20,6 +21,7 @@ struct PagingTitleCellViewModel {
     self.backgroundColor = options.backgroundColor
     self.selectedBackgroundColor = options.selectedBackgroundColor
     self.selected = selected
+    self.menuItemSize = options.menuItemSize
   }
   
 }

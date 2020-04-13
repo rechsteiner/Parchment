@@ -29,6 +29,7 @@ final class SizeDelegateViewController: UIViewController {
     let pagingViewController = PagingViewController()
     pagingViewController.dataSource = self
     pagingViewController.sizeDelegate = self
+    pagingViewController.menuItemSpacing = 10
     
     // Add the paging view controller as a child view controller and
     // contrain it to all edges.
@@ -67,7 +68,7 @@ extension SizeDelegateViewController: PagingViewControllerSizeDelegate {
   func pagingViewController(_ pagingViewController: PagingViewController, widthForPagingItem pagingItem: PagingItem, isSelected: Bool) -> CGFloat {
     guard let item = pagingItem as? PagingIndexItem else { return 0 }
     
-    let insets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    let insets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     let size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: pagingViewController.options.menuItemSize.height)
     let attributes = [NSAttributedString.Key.font: pagingViewController.options.font]
     

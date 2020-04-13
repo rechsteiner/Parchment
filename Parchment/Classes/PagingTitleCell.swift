@@ -9,6 +9,8 @@ open class PagingTitleCell: PagingCell {
   
   public let titleLabel = UILabel(frame: .zero)
   private var viewModel: PagingTitleCellViewModel?
+
+  private var labelHorizontalConstraints: [NSLayoutConstraint]?
   
   open override var isSelected: Bool {
     didSet {
@@ -41,12 +43,14 @@ open class PagingTitleCell: PagingCell {
     contentView.addSubview(titleLabel)
     contentView.isAccessibilityElement = true
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
-    
+
     let horizontalConstraints = NSLayoutConstraint.constraints(
-      withVisualFormat: "H:|-20-[label]-20-|",
+      withVisualFormat: "H:|[label]|",
       options: NSLayoutConstraint.FormatOptions(),
       metrics: nil,
       views: ["label": titleLabel])
+    
+    labelHorizontalConstraints = horizontalConstraints
     
     let verticalContraints = NSLayoutConstraint.constraints(
       withVisualFormat: "V:|[label]|",
@@ -71,6 +75,10 @@ open class PagingTitleCell: PagingCell {
       titleLabel.font = viewModel.font
       titleLabel.textColor = viewModel.textColor
       backgroundColor = viewModel.backgroundColor
+    }
+
+    if case .selfSizing = viewModel.menuItemSize {
+      labelHorizontalConstraints?.forEach { $0.constant = 20 }
     }
   }
 

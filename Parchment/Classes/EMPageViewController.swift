@@ -628,9 +628,13 @@ open class EMPageViewController: UIViewController, UIScrollViewDelegate {
                 // At zero
             } else {
                 if (self.navigationDirection == .forward) {
-                    self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.afterViewController!, progress: progress)
+                    if let selectVc = selectedViewController, let afterVc = afterViewController {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectVc, destinationViewController: afterVc, progress: progress)
+                    }
                 } else if (self.navigationDirection == .reverse) {
-                    self.delegate?.em_pageViewController?(self, isScrollingFrom: self.selectedViewController!, destinationViewController: self.beforeViewController!, progress: progress)
+                    if let selectVc = selectedViewController, let beforeVc = beforeViewController {
+                        self.delegate?.em_pageViewController?(self, isScrollingFrom: selectVc, destinationViewController: beforeVc, progress: progress)
+                    }
                 }
             }
             

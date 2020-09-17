@@ -64,6 +64,7 @@ open class PagingTitleCell: PagingCell {
   
   open func configureTitleLabel() {
     guard let viewModel = viewModel else { return }
+    titleLabel.numberOfLines = 2
     titleLabel.text = viewModel.title
     titleLabel.textAlignment = .center
     

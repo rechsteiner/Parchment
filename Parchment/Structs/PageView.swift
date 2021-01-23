@@ -14,9 +14,9 @@ import UIKit
     /// `PagingOptions` struct to customize the properties.
     @available(iOS 13.0, *)
     public struct PageView: View {
-        public typealias WillScrollCallback = ((Int) -> Void)
-        public typealias DidScrollCallback = ((Int) -> Void)
-        public typealias DidSelectCallback = ((Int) -> Void)
+        public typealias WillScrollCallback = ((PagingItem) -> Void)
+        public typealias DidScrollCallback = ((PagingItem) -> Void)
+        public typealias DidSelectCallback = ((PagingItem) -> Void)
         private let options: PagingOptions
         private var viewControllers = [UIHostingController<AnyView>]()
         private var items = [TabItem]()
@@ -111,8 +111,7 @@ import UIKit
                                       destinationViewController: UIViewController,
                                       transitionSuccessful: Bool)
             {
-                guard let index = (pagingItem as? PagingIndexItem)?.index else { return }
-                parent.didScrollCallback?(index)
+                parent.didScrollCallback?(pagingItem)
 
                 DispatchQueue.main.async {
                     self.parent.scrollToPosition = nil
@@ -124,13 +123,11 @@ import UIKit
                                       startingViewController: UIViewController,
                                       destinationViewController: UIViewController)
             {
-                guard let index = (pagingItem as? PagingIndexItem)?.index else { return }
-                parent.willScrollCallback?(index)
+                parent.willScrollCallback?(pagingItem)
             }
 
             func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: PagingItem) {
-                guard let index = (pagingItem as? PagingIndexItem)?.index else { return }
-                parent.didSelectCallback?(index)
+                parent.didSelectCallback?(pagingItem)
             }
         }
     }

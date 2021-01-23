@@ -44,14 +44,14 @@ struct ContentView: View {
                     }
                 }
             }
-            .willScroll { index in
-                print("willScroll: \(index)")
+            .willScroll { pagingItem in
+                print("willScroll: \(pagingItem)")
             }
-            .didScroll { index in
-                print("didScroll: \(index)")
+            .didScroll { pagingItem in
+                print("didScroll: \(pagingItem)")
             }
-            .didSelect { index in
-                print("didSelect: \(index)")
+            .didSelect { pagingItem in
+                print("didSelect: \(pagingItem)")
             }
         }
     }

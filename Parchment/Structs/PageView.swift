@@ -13,15 +13,15 @@ import UIKit
     /// It can be used with any fixed array of `PagingItem`s. Use the
     /// `PagingOptions` struct to customize the properties.
     @available(iOS 13.0, *)
-    public struct PageView: View {
-        public typealias WillScrollCallback = ((PagingItem) -> Void)
-        public typealias DidScrollCallback = ((PagingItem) -> Void)
-        public typealias DidSelectCallback = ((PagingItem) -> Void)
+    public struct PageView<Item: PagingItem, Page: View>: View where Item: Hashable {
+        public typealias WillScrollCallback = ((Item) -> Void)
+        public typealias DidScrollCallback = ((Item) -> Void)
+        public typealias DidSelectCallback = ((Item) -> Void)
         private let options: PagingOptions
-        private var viewControllers = [UIHostingController<AnyView>]()
-        private var items = [TabItem]()
+        private var items = [Item]()
+        let content: (Item) -> Page
         @Binding
-        private var scrollToPosition: ScrollPosition?
+        private var scrollToPosition: PageViewScrollPosition?
         var willScrollCallback: WillScrollCallback?
         var didScrollCallback: DidScrollCallback?
         var didSelectCallback: DidSelectCallback?
@@ -33,19 +33,20 @@ import UIKit
         ///   - items: The array of `PagingItem`s to display in the menu.
         ///   - content: A callback that returns the `View` for each item.
         public init(options: PagingOptions = PagingOptions(),
-                    scrollToPosition: Binding<ScrollPosition?>? = nil,
-                    @TabBuilder _ content: () -> [TabItem])
+                    scrollToPosition: Binding<PageViewScrollPosition?>? = nil,
+                    items: [Item],
+                    content: @escaping (Item) -> Page)
         {
             self._scrollToPosition = scrollToPosition ?? .constant(nil)
             self.options = options
-            self.items = content()
-            self.viewControllers = items.map { UIHostingController(rootView: $0.view) }
+            self.items = items
+            self.content = content
         }
 
         public var body: some View {
             PagingController(items: items,
                              options: options,
-                             viewControllers: viewControllers,
+                             content: content,
                              scrollToPosition: $scrollToPosition,
                              willScrollCallback: willScrollCallback,
                              didScrollCallback: didScrollCallback,
@@ -53,11 +54,12 @@ import UIKit
         }
 
         struct PagingController: UIViewControllerRepresentable {
-            let items: [TabItem]
+            let items: [Item]
             let options: PagingOptions
-            let viewControllers: [UIHostingController<AnyView>]
+            let content: (Item) -> Page
+            var viewControllers = [Item: UIHostingController<Page>]()
             @Binding
-            var scrollToPosition: ScrollPosition?
+            var scrollToPosition: PageViewScrollPosition?
             var willScrollCallback: WillScrollCallback?
             var didScrollCallback: DidScrollCallback?
             var didSelectCallback: DidSelectCallback?
@@ -98,15 +100,21 @@ import UIKit
             }
 
             func pagingViewController(_: PagingViewController, viewControllerAt index: Int) -> UIViewController {
-                parent.viewControllers[index]
+                guard let viewController = parent.viewControllers[parent.items[index]] else {
+                    let view = parent.content(parent.items[index])
+                    let viewController = UIHostingController(rootView: view)
+                    parent.viewControllers[parent.items[index]] = viewController
+                    return viewController
+                }
+                return viewController
             }
 
             func pagingViewController(_: PagingViewController, pagingItemAt index: Int) -> PagingItem {
-                parent.items[index].item
+                parent.items[index]
             }
 
             func pagingViewController(_ pagingViewController: PagingViewController,
-                                      didScrollToItem pagingItem: PagingItem,
+                                      didScrollToItem pagingItem: Item,
                                       startingViewController: UIViewController?,
                                       destinationViewController: UIViewController,
                                       transitionSuccessful: Bool)
@@ -119,52 +127,27 @@ import UIKit
             }
 
             func pagingViewController(_ pagingViewController: PagingViewController,
-                                      willScrollToItem pagingItem: PagingItem,
+                                      willScrollToItem pagingItem: Item,
                                       startingViewController: UIViewController,
                                       destinationViewController: UIViewController)
             {
                 parent.willScrollCallback?(pagingItem)
             }
 
-            func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: PagingItem) {
+            func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: Item) {
                 parent.didSelectCallback?(pagingItem)
             }
         }
     }
 
     @available(iOS 13.0, *)
-    public extension PageView {
-        @available(iOS 13.0, *)
-        struct TabItem {
-            var view: AnyView
-            var item: PagingItem
+    public struct PageViewScrollPosition: Equatable {
+        public var index: Int
+        public var animated: Bool
 
-            public init<V>(item: PagingItem, @ViewBuilder content: @escaping () -> V) where V: View {
-                self.item = item
-                self.view = AnyView(content())
-            }
-        }
-
-        struct ScrollPosition: Equatable {
-            public var index: Int
-            public var animated: Bool
-
-            public init(index: Int, animated: Bool = true) {
-                self.index = index
-                self.animated = animated
-            }
-        }
-    }
-
-    @_functionBuilder
-    @available(iOS 13.0, *)
-    public enum TabBuilder {
-        public static func buildBlock(_ children: PageView.TabItem...) -> [PageView.TabItem] {
-            children
-        }
-
-        public static func buildBlock(_ component: PageView.TabItem) -> [PageView.TabItem] {
-            [component]
+        public init(index: Int, animated: Bool = true) {
+            self.index = index
+            self.animated = animated
         }
     }
 

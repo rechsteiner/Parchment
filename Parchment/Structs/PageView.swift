@@ -14,9 +14,9 @@ import UIKit
     /// `PagingOptions` struct to customize the properties.
     @available(iOS 13.0, *)
     public struct PageView<Item: PagingItem, Page: View>: View where Item: Hashable {
-        public typealias WillScrollCallback = ((Item) -> Void)
-        public typealias DidScrollCallback = ((Item) -> Void)
-        public typealias DidSelectCallback = ((Item) -> Void)
+        public typealias WillScrollCallback = ((PagingItem) -> Void)
+        public typealias DidScrollCallback = ((PagingItem) -> Void)
+        public typealias DidSelectCallback = ((PagingItem) -> Void)
         private let options: PagingOptions
         private var items = [Item]()
         let content: (Item) -> Page
@@ -114,7 +114,7 @@ import UIKit
             }
 
             func pagingViewController(_ pagingViewController: PagingViewController,
-                                      didScrollToItem pagingItem: Item,
+                                      didScrollToItem pagingItem: PagingItem,
                                       startingViewController: UIViewController?,
                                       destinationViewController: UIViewController,
                                       transitionSuccessful: Bool)
@@ -127,14 +127,14 @@ import UIKit
             }
 
             func pagingViewController(_ pagingViewController: PagingViewController,
-                                      willScrollToItem pagingItem: Item,
+                                      willScrollToItem pagingItem: PagingItem,
                                       startingViewController: UIViewController,
                                       destinationViewController: UIViewController)
             {
                 parent.willScrollCallback?(pagingItem)
             }
 
-            func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: Item) {
+            func pagingViewController(_ pagingViewController: PagingViewController, didSelectItem pagingItem: PagingItem) {
                 parent.didSelectCallback?(pagingItem)
             }
         }

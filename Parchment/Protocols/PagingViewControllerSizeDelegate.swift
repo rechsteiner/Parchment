@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol PagingViewControllerSizeDelegate: class {
+public protocol PagingViewControllerSizeDelegate: AnyObject {
   
   /// Manually control the width for a given `PagingItem`. Parchment
   /// does not support self-sizing cells, so you have to use this if

@@ -1,6 +1,6 @@
 import UIKit
 
-protocol CollectionViewLayout: class {
+protocol CollectionViewLayout: AnyObject {
   var state: PagingState { get set }
   var visibleItems: PagingItems { get set }
   var sizeCache: PagingSizeCache? { get set }
@@ -13,7 +13,7 @@ protocol CollectionViewLayout: class {
 
 extension PagingCollectionViewLayout: CollectionViewLayout {}
 
-protocol CollectionView: class {
+protocol CollectionView: AnyObject {
   var indexPathsForVisibleItems: [IndexPath] { get }
   var isDragging: Bool { get }
   var window: UIWindow? { get }

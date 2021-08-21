@@ -4,7 +4,7 @@ import UIKit
 /// The `PagingViewControllerDelegate` protocol defines methods that
 /// can used to determine when the user navigates between view
 /// controllers.
-public protocol PagingViewControllerDelegate: class {
+public protocol PagingViewControllerDelegate: AnyObject {
   
   /// Called whenever a scroll transition is in progress.
   ///

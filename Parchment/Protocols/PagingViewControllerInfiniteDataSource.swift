@@ -7,7 +7,7 @@ import UIKit
 /// In order for these methods to be called, you first need to set
 /// the initial `PagingItem` by calling `select(pagingItem:)` on
 /// `PagingViewController`.
-public protocol PagingViewControllerInfiniteDataSource: class {
+public protocol PagingViewControllerInfiniteDataSource: AnyObject {
                                                     
   /// Return the view controller accociated with a `PagingItem`. This
   /// method is only called for the currently selected `PagingItem`,

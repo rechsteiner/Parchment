@@ -13,7 +13,7 @@ let package = Package(
             path: "Parchment",
             linkerSettings: [
                 .unsafeFlags([
-                    "-weak_framework SwiftUI",
+                    "-weak_framework", "SwiftUI"
                 ]),
             ]
         ),

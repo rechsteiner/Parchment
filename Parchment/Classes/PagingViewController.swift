@@ -609,7 +609,10 @@ open class PagingViewController:
 
     open func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let pagingItem = pagingController.visibleItems.pagingItem(for: indexPath)
-        delegate?.pagingViewController(self, didSelectItem: pagingItem)
+
+        guard let currentPagingItem = state.currentPagingItem else { return }
+        delegate?.pagingViewController(self, didSelectItem: pagingItem, didSelectPagingCellAt: indexPath.row, currentItem: currentPagingItem)
+        
         pagingController.select(indexPath: indexPath, animated: true)
     }
 

@@ -58,10 +58,13 @@ public protocol PagingViewControllerDelegate: AnyObject {
     ///
     /// - Parameter pagingViewController: The `PagingViewController` instance
     /// - Parameter pagingItem: The item that was selected.
+    /// - Parameter index: The index for selected paging cell
+    /// - Parameter currentItem: The current item
     func pagingViewController(
-        _ pagingViewController: PagingViewController,
-        didSelectItem pagingItem: PagingItem
-    )
+      _ pagingViewController: PagingViewController,
+      didSelectItem pagingItem: PagingItem,
+      didSelectPagingCellAt index: Int,
+      currentItem: PagingItem)
 }
 
 public extension PagingViewControllerDelegate {
@@ -96,9 +99,10 @@ public extension PagingViewControllerDelegate {
     }
 
     func pagingViewController(
-        _: PagingViewController,
-        didSelectItem _: PagingItem
-    ) {
-        return
+        _ pagingViewController: PagingViewController,
+        didSelectItem pagingItem: PagingItem,
+        didSelectPagingCellAt index: Int,
+        currentItem: PagingItem) {
+      return
     }
 }

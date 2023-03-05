@@ -330,13 +330,24 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
             // all the other cases we want to center them if the menu
             // alignment is set to .center
             default:
-                if case .center = options.menuHorizontalAlignment {
+                switch options.menuHorizontalAlignment {
+                case .center:
                     // Subtract the menu insets as they should not have an effect on
                     // whether or not we should center the items.
                     let offset = (view.bounds.width - previousFrame.maxX - adjustedMenuInsets.left) / 2
                     for attributes in layoutAttributes.values {
                         attributes.frame = attributes.frame.offsetBy(dx: offset, dy: 0)
                     }
+                case .right:
+                    // Subtract the menu insets as they should not have an effect on
+                    // whether or not we should right align the items.
+                    let offset = (view.bounds.width - previousFrame.maxX - adjustedMenuInsets.right)
+                    for attributes in layoutAttributes.values {
+                        attributes.frame = attributes.frame.offsetBy(dx: offset, dy: 0)
+                    }
+                    
+                default:
+                    break
                 }
             }
         }

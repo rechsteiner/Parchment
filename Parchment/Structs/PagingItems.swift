@@ -28,7 +28,7 @@ public struct PagingItems {
     /// - Parameter pagingItem: A `PagingItem` instance
     /// - Returns: The `IndexPath` for the given `PagingItem`
     public func indexPath(for pagingItem: PagingItem) -> IndexPath? {
-        guard let index = items.firstIndex(where: { $0.isEqual(to: pagingItem) }) else { return nil }
+        guard let index = itemIndexNearCenter(of: pagingItem) else { return nil }
         return IndexPath(item: index, section: 0)
     }
 
@@ -59,8 +59,8 @@ public struct PagingItems {
 
     func isBefore(_ lhs: PagingItem, _ rhs: PagingItem) -> Bool {
         guard
-            let lhsIndex = items.firstIndex(where : { $0.isEqual(to: lhs) }),
-            let rhsIndex = items.firstIndex(where: { $0.isEqual(to: rhs) })
+            let lhsIndex = itemIndexNearCenter(of: lhs),
+            let rhsIndex = itemIndexNearCenter(of: rhs)
         else { return lhs.isBefore(item: rhs) }
 
         return lhsIndex < rhsIndex
@@ -68,8 +68,8 @@ public struct PagingItems {
 
     func isSibling(from: PagingItem, to: PagingItem) -> Bool {
         guard
-            let fromIndex = items.firstIndex(where: { $0.isEqual(to: from) }),
-            let toIndex = items.firstIndex(where: { $0.isEqual(to: to) })
+            let fromIndex = itemIndexNearCenter(of: from),
+            let toIndex = itemIndexNearCenter(of: to)
         else { return false }
 
         if fromIndex == toIndex - 1 {
@@ -83,5 +83,19 @@ public struct PagingItems {
 
     func contains(_ pagingItem: PagingItem) -> Bool {
         return cachedItems[pagingItem.identifier] != nil ? true : false
+    }
+
+    func itemIndexNearCenter(of pagingItem: PagingItem) -> Int? {
+        let centerOfIndex = (items.count - 1) / 2
+
+        return items.enumerated()
+            .filter { pagingItem.isEqual(to: $1) }
+            .reduce(into: (Int.max, nil) as (diff: Int, index: Int?)) { result, element in
+                let diff = abs(centerOfIndex - element.offset)
+                if diff < result.diff {
+                    result = (diff, element.offset)
+                }
+            }
+            .index
     }
 }

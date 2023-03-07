@@ -187,7 +187,7 @@ struct PagingDistance {
         // item won't have any affect on the position of the upcoming item.
         if sizeCache.implementsSizeDelegate {
             if let _ = fromAttributes {
-                if visibleItems.isBefore(from: fromItem, to: toItem) {
+                if visibleItems.isBefore(fromItem, toItem) {
                     let fromWidth = sizeCache.itemSize(for: fromItem)
                     let fromDiff = fromSize - fromWidth
                     distance -= fromDiff
@@ -212,7 +212,7 @@ struct PagingDistance {
             // the upcoming item when we change its frame. We therefore need
             // to subtract the difference of the size.
             if let _ = fromAttributes {
-                if visibleItems.isBefore(from: toItem, to: fromItem) {
+                if visibleItems.isBefore(toItem, fromItem) {
                     let toDiff = toWidth - toSize
                     distance += toDiff
                 } else {
@@ -246,7 +246,7 @@ struct PagingDistance {
                 let toWidth = sizeCache.itemWidthSelected(for: toItem)
                 let fromWidth = sizeCache.itemSize(for: fromItem)
 
-                if visibleItems.isBefore(from: toItem, to: fromItem) {
+                if visibleItems.isBefore(toItem, fromItem) {
                     distance = -(toSize + (fromCenter - (toCenter + (toSize / 2))) - (toWidth / 2)) - distanceToCenter
                 } else {
                     let toDiff = (toWidth - toSize) / 2

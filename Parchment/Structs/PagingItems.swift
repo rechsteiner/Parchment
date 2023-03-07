@@ -49,21 +49,21 @@ public struct PagingItems {
     /// - Parameter to: The `PagingItem` being scrolled towards
     /// - Returns: The `PagingDirection` for a given `PagingItem`
     public func direction(from: PagingItem, to: PagingItem) -> PagingDirection {
-        if isBefore(from: from, to: to) {
+        if isBefore(from, to) {
             return .forward(sibling: isSibling(from: from, to: to))
-        } else if isBefore(from: to, to: from) {
+        } else if isBefore(to, from) {
             return .reverse(sibling: isSibling(from: from, to: to))
         }
         return .none
     }
 
-    func isBefore(from: PagingItem, to: PagingItem) -> Bool {
+    func isBefore(_ lhs: PagingItem, _ rhs: PagingItem) -> Bool {
         guard
-            let fromIndex = items.firstIndex(where : { $0.isEqual(to: from) }),
-            let toIndex = items.firstIndex(where: { $0.isEqual(to: to) })
-        else { return from.isBefore(item: to) }
+            let lhsIndex = items.firstIndex(where : { $0.isEqual(to: lhs) }),
+            let rhsIndex = items.firstIndex(where: { $0.isEqual(to: rhs) })
+        else { return lhs.isBefore(item: rhs) }
 
-        return fromIndex < toIndex
+        return lhsIndex < rhsIndex
     }
 
     func isSibling(from: PagingItem, to: PagingItem) -> Bool {

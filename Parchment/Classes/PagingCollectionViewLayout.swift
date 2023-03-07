@@ -439,7 +439,7 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     private func indicatorMetricForFirstItem() -> PagingIndicatorMetric? {
         guard let currentPagingItem = state.currentPagingItem else { return nil }
         if let first = visibleItems.items.first {
-            if visibleItems.isBefore(from: currentPagingItem, to: first) {
+            if visibleItems.isBefore(currentPagingItem, first) {
                 return PagingIndicatorMetric(
                     frame: indicatorFrameForIndex(-1),
                     insets: indicatorInsetsForIndex(-1),
@@ -453,7 +453,7 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     private func indicatorMetricForLastItem() -> PagingIndicatorMetric? {
         guard let currentPagingItem = state.currentPagingItem else { return nil }
         if let last = visibleItems.items.last {
-            if visibleItems.isBefore(from: last, to: currentPagingItem) {
+            if visibleItems.isBefore(last, currentPagingItem) {
                 return PagingIndicatorMetric(
                     frame: indicatorFrameForIndex(visibleItems.items.count),
                     insets: indicatorInsetsForIndex(visibleItems.items.count),

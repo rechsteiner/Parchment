@@ -317,13 +317,13 @@ final class PagingController: NSObject {
         if collectionView.near(edge: .left, clearance: contentInsets.left) {
             if let firstPagingItem = visibleItems.items.first {
                 if visibleItems.hasItemsBefore {
-                    reloadItems(around: firstPagingItem)
+                    prependItems(around: firstPagingItem)
                 }
             }
         } else if collectionView.near(edge: .right, clearance: contentInsets.right) {
             if let lastPagingItem = visibleItems.items.last {
                 if visibleItems.hasItemsAfter {
-                    reloadItems(around: lastPagingItem)
+                    appendItems(around: lastPagingItem)
                 }
             }
         }
@@ -497,7 +497,19 @@ final class PagingController: NSObject {
         var toItems = generateItems(around: pagingItem)
 
         if keepExisting {
-            toItems = visibleItems.union(toItems)
+            // TODO: Document why we're doing all this.
+            var oldItems: [PagingItem] = []
+            for item in visibleItems.items {
+                if toItems.contains(where: { $0.isEqual(to: item)}) == false {
+                    oldItems.append(item)
+                }
+            }
+
+            if let lastItem = visibleItems.items.last, lastItem.isBefore(item: pagingItem) {
+                toItems = oldItems + toItems
+            } else if let firstItem = visibleItems.items.first, pagingItem.isBefore(item: firstItem) {
+                toItems.append(contentsOf: oldItems)
+            }
         }
 
         let oldLayoutAttributes = collectionViewLayout.layoutAttributes
@@ -543,6 +555,98 @@ final class PagingController: NSObject {
         // seems to get in a weird state.
         collectionView.layoutIfNeeded()
 
+        bop()
+    }
+
+    private func appendItems(around pagingItem: PagingItem) {
+        let toItems = generateItems(around: pagingItem)
+        let oldLayoutAttributes = collectionViewLayout.layoutAttributes
+        let oldContentOffset = collectionView.contentOffset
+        let oldVisibleItems = visibleItems
+
+        configureSizeCache(for: pagingItem)
+
+        visibleItems = PagingItems(
+            items: toItems,
+            hasItemsBefore: hasItemBefore(pagingItem: toItems.first),
+            hasItemsAfter: hasItemAfter(pagingItem: toItems.last)
+        )
+
+        collectionView.reloadData()
+        collectionViewLayout.prepare()
+
+        // After reloading the data the content offset is going to be
+        // reset. We need to diff which items where added/removed and
+        // update the content offset so it looks it is the same as before
+        // reloading. This gives the perception of a smooth scroll.
+        var offset: CGFloat = 0
+        for item in oldVisibleItems.items {
+            if toItems.first?.isEqual(to: item) == true {
+                break
+            }
+            if let indexPath = oldVisibleItems.indexPath(for: item) {
+                offset += oldLayoutAttributes[indexPath]?.bounds.width ?? 0
+                offset += options.menuItemSpacing
+            }
+        }
+
+        collectionView.contentOffset = CGPoint(
+            x: oldContentOffset.x - offset,
+            y: oldContentOffset.y
+        )
+
+        // We need to perform layout here, if not the collection view
+        // seems to get in a weird state.
+        collectionView.layoutIfNeeded()
+
+        bop()
+    }
+
+    private func prependItems(around pagingItem: PagingItem) {
+        let toItems = generateItems(around: pagingItem)
+        let oldContentOffset = collectionView.contentOffset
+        let oldVisibleItems = visibleItems
+
+        configureSizeCache(for: pagingItem)
+
+        visibleItems = PagingItems(
+            items: toItems,
+            hasItemsBefore: hasItemBefore(pagingItem: toItems.first),
+            hasItemsAfter: hasItemAfter(pagingItem: toItems.last)
+        )
+
+        collectionView.reloadData()
+        collectionViewLayout.prepare()
+
+        // After reloading the data the content offset is going to be
+        // reset. We need to diff which items where added/removed and
+        // update the content offset so it looks it is the same as before
+        // reloading. This gives the perception of a smooth scroll.
+        let newLayoutAttributes = collectionViewLayout.layoutAttributes
+        var offset: CGFloat = 0
+        for item in toItems {
+            if oldVisibleItems.items.first?.isEqual(to: item) == true {
+                break
+            }
+            if let indexPath = visibleItems.indexPath(for: item) {
+                offset -= newLayoutAttributes[indexPath]?.bounds.width ?? 0
+                offset -= options.menuItemSpacing
+            }
+        }
+
+        collectionView.contentOffset = CGPoint(
+            x: oldContentOffset.x - offset,
+            y: oldContentOffset.y
+        )
+
+        // We need to perform layout here, if not the collection view
+        // seems to get in a weird state.
+        collectionView.layoutIfNeeded()
+
+        bop()
+    }
+
+    private func bop() {
         // The content offset and distance between items can change while a
         // transition is in progress meaning the current transition will be
         // wrong. For instance, when hitting the edge of the collection view

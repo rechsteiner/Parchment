@@ -12,6 +12,7 @@ struct PagingDistance {
     private let selectedScrollPosition: PagingSelectedScrollPosition
     private let sizeCache: PagingSizeCache
     private let navigationOrientation: PagingNavigationOrientation
+    private let visibleItems: PagingItems
 
     private var fromSize: CGFloat {
         guard let attributes = fromAttributes else { return 0 }
@@ -114,6 +115,7 @@ struct PagingDistance {
         self.selectedScrollPosition = selectedScrollPosition
         self.sizeCache = sizeCache
         self.navigationOrientation = navigationOrientation
+        self.visibleItems = visibleItems
 
         if let currentIndexPath = visibleItems.indexPath(for: currentPagingItem),
             let fromAttributes = layoutAttributes[currentIndexPath] {
@@ -185,7 +187,7 @@ struct PagingDistance {
         // item won't have any affect on the position of the upcoming item.
         if sizeCache.implementsSizeDelegate {
             if let _ = fromAttributes {
-                if fromItem.isBefore(item: toItem) {
+                if visibleItems.isBefore(from: fromItem, to: toItem) {
                     let fromWidth = sizeCache.itemSize(for: fromItem)
                     let fromDiff = fromSize - fromWidth
                     distance -= fromDiff
@@ -210,7 +212,7 @@ struct PagingDistance {
             // the upcoming item when we change its frame. We therefore need
             // to subtract the difference of the size.
             if let _ = fromAttributes {
-                if toItem.isBefore(item: fromItem) {
+                if visibleItems.isBefore(from: toItem, to: fromItem) {
                     let toDiff = toWidth - toSize
                     distance += toDiff
                 } else {
@@ -244,7 +246,7 @@ struct PagingDistance {
                 let toWidth = sizeCache.itemWidthSelected(for: toItem)
                 let fromWidth = sizeCache.itemSize(for: fromItem)
 
-                if toItem.isBefore(item: fromItem) {
+                if visibleItems.isBefore(from: toItem, to: fromItem) {
                     distance = -(toSize + (fromCenter - (toCenter + (toSize / 2))) - (toWidth / 2)) - distanceToCenter
                 } else {
                     let toDiff = (toWidth - toSize) / 2

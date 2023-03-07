@@ -25,7 +25,7 @@ func createDistance(
         collectionView.contentSize = upcomingItemBounds.size
     }
 
-    let visibleItems = PagingItems(items: [currentItem, upcomingItem])
+    let visibleItems = PagingItems(items: [currentItem, upcomingItem].sorted())
     var layoutAttributes: [IndexPath: PagingCellLayoutAttributes] = [:]
 
     if let currentItemBounds = currentItemBounds {

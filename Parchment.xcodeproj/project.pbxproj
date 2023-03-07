@@ -39,6 +39,7 @@
 		3EA04A641C53BFF40054E5E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A631C53BFF40054E5E0 /* Assets.xcassets */; };
 		3EA04A671C53BFF40054E5E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EA04A651C53BFF40054E5E0 /* LaunchScreen.storyboard */; };
 		3EFEFBF71C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */; };
+		424CF00229B6E572007B6194 /* InfiniteLoopingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424CF00129B6E572007B6194 /* InfiniteLoopingViewController.swift */; };
 		950ABE422437BD4D00CAD458 /* PagingNavigationOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABE412437BD4D00CAD458 /* PagingNavigationOrientation.swift */; };
 		950ABE452438975300CAD458 /* PageViewExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 950ABE442438975300CAD458 /* PageViewExampleViewController.swift */; };
 		951E163720A21D3A0055E9D4 /* PagingViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954842601F4251F90072038C /* PagingViewControllerTests.swift */; };
@@ -245,6 +246,7 @@
 		3EA04A681C53BFF40054E5E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EC0184C1C95F993005421AD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		3EFEFBF61C80B8820023C949 /* PagingIndicatorLayoutAttributesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingIndicatorLayoutAttributesTests.swift; sourceTree = "<group>"; };
+		424CF00129B6E572007B6194 /* InfiniteLoopingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteLoopingViewController.swift; sourceTree = "<group>"; };
 		950ABE412437BD4D00CAD458 /* PagingNavigationOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingNavigationOrientation.swift; sourceTree = "<group>"; };
 		950ABE442438975300CAD458 /* PageViewExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewExampleViewController.swift; sourceTree = "<group>"; };
 		952D802E1E37CC09003DCB18 /* PagingTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PagingTransition.swift; sourceTree = "<group>"; };
@@ -551,6 +553,14 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		424CF00029B6E54D007B6194 /* InfiniteLooping */ = {
+			isa = PBXGroup;
+			children = (
+				424CF00129B6E572007B6194 /* InfiniteLoopingViewController.swift */,
+			);
+			path = InfiniteLooping;
+			sourceTree = "<group>";
+		};
 		950ABE432438972400CAD458 /* PageViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -589,6 +599,7 @@
 				955453CD2413DC5A00923BC8 /* Calendar */,
 				953B8D332416C3C60047BBA1 /* SelfSizing */,
 				955453D42413DD7A00923BC8 /* SizeDelegate */,
+				424CF00029B6E54D007B6194 /* InfiniteLooping */,
 				955453D72413E0FA00923BC8 /* Images */,
 				955453DC2413E1A500923BC8 /* Icons */,
 				955453F12415180A00923BC8 /* Storyboard */,
@@ -1079,6 +1090,7 @@
 				955453DA2413E11300923BC8 /* ImagePagingCell.swift in Sources */,
 				955453C62413D76C00923BC8 /* ExamplesViewController.swift in Sources */,
 				955453C82413DB7900923BC8 /* UIView+constraints.swift in Sources */,
+				424CF00229B6E572007B6194 /* InfiniteLoopingViewController.swift in Sources */,
 				955453ED2415165800923BC8 /* HeaderViewController.swift in Sources */,
 				955453CF2413DC6900923BC8 /* UIColor+interpolation.swift in Sources */,
 				955453F32415181800923BC8 /* StoryboardViewController.swift in Sources */,

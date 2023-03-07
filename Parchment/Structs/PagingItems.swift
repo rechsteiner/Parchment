@@ -39,7 +39,7 @@ public struct PagingItems {
     /// - Parameter indexPath: An `IndexPath` that is currently visible
     /// - Returns: The `PagingItem` for the given `IndexPath`
     public func pagingItem(for indexPath: IndexPath) -> PagingItem {
-        return items[indexPath.item]
+        items[indexPath.item]
     }
 
     /// The direction from a given `PagingItem` to another `PagingItem`.
@@ -82,7 +82,7 @@ public struct PagingItems {
     }
 
     func contains(_ pagingItem: PagingItem) -> Bool {
-        return cachedItems[pagingItem.identifier] != nil ? true : false
+        cachedItems[pagingItem.identifier] != nil ? true : false
     }
 
     func itemIndexNearCenter(of pagingItem: PagingItem) -> Int? {

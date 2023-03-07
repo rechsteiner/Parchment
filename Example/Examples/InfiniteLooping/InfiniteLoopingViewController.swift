@@ -2,7 +2,7 @@ import UIKit
 import Parchment
 
 final class InfiniteLoopingViewController: UIViewController {
-    let items: [PagingIndexItem] = [
+    let items: [String] = [
         "Sunday",
         "Monday",
         "Tuesday",
@@ -10,7 +10,7 @@ final class InfiniteLoopingViewController: UIViewController {
         "Thursday",
         "Friday",
         "Saturday"
-    ].enumerated().map(PagingIndexItem.init(index:title:))
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ final class InfiniteLoopingViewController: UIViewController {
         view.addSubview(pagingViewController.view)
         view.constrainToEdges(pagingViewController.view)
         pagingViewController.didMove(toParent: self)
-        pagingViewController.select(pagingItem: items.first!)
+        pagingViewController.select(pagingItem: PagingIndexItem(index: 0, title: items.first!))
     }
 }
 
@@ -33,22 +33,21 @@ final class InfiniteLoopingViewController: UIViewController {
 extension InfiniteLoopingViewController: PagingViewControllerInfiniteDataSource {
     func pagingViewController(_: PagingViewController, itemAfter pagingItem: PagingItem) -> PagingItem? {
         let nextIndex = (pagingItem as! PagingIndexItem).index + 1
-        if nextIndex > items.last!.index { // Loop if out of range
-            return items.first!
+        if items.count <= nextIndex { // Loop if out of range
+            return PagingIndexItem(index: 0, title: items.first!)
         }
-        return items[nextIndex]
+        return PagingIndexItem(index: nextIndex, title: items[nextIndex])
     }
 
     func pagingViewController(_: PagingViewController, itemBefore pagingItem: PagingItem) -> PagingItem? {
         let nextIndex = (pagingItem as! PagingIndexItem).index - 1
-        if nextIndex < items.first!.index { // Loop if out of range
-            return items.last!
+        if nextIndex < 0 { // Loop if out of range
+            return PagingIndexItem(index: items.count - 1, title: items.last!)
         }
-        return items[nextIndex]
+        return PagingIndexItem(index: nextIndex, title: items[nextIndex])
     }
 
     func pagingViewController(_: PagingViewController, viewControllerFor pagingItem: PagingItem) -> UIViewController {
-        let item = pagingItem as! PagingIndexItem
-        return ContentViewController(title: item.title)
+        ContentViewController(title: (pagingItem as! PagingIndexItem).title)
     }
 }

@@ -485,7 +485,12 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     }
 
     private func upcomingIndexPathForIndexPath(_ indexPath: IndexPath?) -> IndexPath? {
-        if let upcomingPagingItem = state.upcomingPagingItem, let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem) {
+        if let currentPagingItem = state.currentPagingItem,
+           let upcomingPagingItem = state.upcomingPagingItem,
+           let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem, nearest: currentPagingItem) {
+            return upcomingIndexPath
+        } else if let upcomingPagingItem = state.upcomingPagingItem,
+            let upcomingIndexPath = visibleItems.indexPath(for: upcomingPagingItem) {
             return upcomingIndexPath
         } else if let indexPath = indexPath {
             if indexPath.item == range.lowerBound {

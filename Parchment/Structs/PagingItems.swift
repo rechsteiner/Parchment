@@ -28,7 +28,22 @@ public struct PagingItems {
     /// - Parameter pagingItem: A `PagingItem` instance
     /// - Returns: The `IndexPath` for the given `PagingItem`
     public func indexPath(for pagingItem: PagingItem) -> IndexPath? {
-        guard let index = itemIndexNearCenter(of: pagingItem) else { return nil }
+        guard let index = itemIndexNearCenter(for: pagingItem) else { return nil }
+        return IndexPath(item: index, section: 0)
+    }
+
+    /// The `IndexPath` for a given `PagingItem`. Returns nil if the
+    /// `PagingItem` is not in the `items` array.
+    ///
+    /// - Parameter pagingItem: A `PagingItem` instance
+    /// - Parameter basePagingItem: Select the instance nearest to `basePagingItem`.
+    /// - Returns: The `IndexPath` for the given `PagingItem`
+    public func indexPath(for pagingItem: PagingItem, nearest basePagingItem: PagingItem) -> IndexPath? {
+        guard
+            let baseItemIndex = itemIndexNearCenter(for: basePagingItem),
+            let index = itemIndex(for: pagingItem, nearestTo: CGFloat(baseItemIndex))
+        else { return nil }
+
         return IndexPath(item: index, section: 0)
     }
 
@@ -59,8 +74,8 @@ public struct PagingItems {
 
     func isBefore(_ lhs: PagingItem, _ rhs: PagingItem) -> Bool {
         guard
-            let lhsIndex = itemIndexNearCenter(of: lhs),
-            let rhsIndex = itemIndexNearCenter(of: rhs)
+            let lhsIndex = itemIndexNearCenter(for: lhs),
+            let rhsIndex = itemIndex(for: rhs, nearestTo: CGFloat(lhsIndex))
         else { return lhs.isBefore(item: rhs) }
 
         return lhsIndex < rhsIndex
@@ -68,8 +83,8 @@ public struct PagingItems {
 
     func isSibling(from: PagingItem, to: PagingItem) -> Bool {
         guard
-            let fromIndex = itemIndexNearCenter(of: from),
-            let toIndex = itemIndexNearCenter(of: to)
+            let fromIndex = itemIndexNearCenter(for: from),
+            let toIndex = itemIndex(for: to, nearestTo: CGFloat(fromIndex))
         else { return false }
 
         if fromIndex == toIndex - 1 {
@@ -82,16 +97,19 @@ public struct PagingItems {
     }
 
     func contains(_ pagingItem: PagingItem) -> Bool {
-        cachedItems[pagingItem.identifier] != nil ? true : false
+        cachedItems.keys.contains(pagingItem.identifier)
     }
 
-    func itemIndexNearCenter(of pagingItem: PagingItem) -> Int? {
-        let centerOfIndex = (items.count - 1) / 2
+    func itemIndexNearCenter(for pagingItem: PagingItem) -> Int? {
+        let centerOfIndex = CGFloat(items.count - 1) / 2.0
+        return itemIndex(for: pagingItem, nearestTo: centerOfIndex)
+    }
 
-        return items.enumerated()
+    func itemIndex(for pagingItem: PagingItem, nearestTo index: CGFloat) -> Int? {
+        items.enumerated()
             .filter { pagingItem.isEqual(to: $1) }
-            .reduce(into: (Int.max, nil) as (diff: Int, index: Int?)) { result, element in
-                let diff = abs(centerOfIndex - element.offset)
+            .reduce(into: (CGFloat.greatestFiniteMagnitude, nil) as (diff: CGFloat, index: Int?)) { result, element in
+                let diff = abs(index - CGFloat(element.offset))
                 if diff < result.diff {
                     result = (diff, element.offset)
                 }

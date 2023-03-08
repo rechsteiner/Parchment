@@ -87,52 +87,53 @@ final class PagingController: NSObject {
             )
 
         case .selected:
-            if let currentPagingItem = state.currentPagingItem {
-                if pagingItem.isEqual(to: currentPagingItem) == false {
-                    if animated {
-                        appendItemsIfNeeded(upcomingPagingItem: pagingItem)
+            guard
+                let currentPagingItem = state.currentPagingItem,
+                !pagingItem.isEqual(to: currentPagingItem)
+            else { return }
 
-                        let transition = calculateTransition(
-                            from: currentPagingItem,
-                            to: pagingItem
-                        )
+            if animated {
+                appendItemsIfNeeded(upcomingPagingItem: pagingItem)
 
-                        state = .scrolling(
-                            pagingItem: currentPagingItem,
-                            upcomingPagingItem: pagingItem,
-                            progress: 0,
-                            initialContentOffset: transition.contentOffset,
-                            distance: transition.distance
-                        )
+                let transition = calculateTransition(
+                    from: currentPagingItem,
+                    to: pagingItem
+                )
 
-                        let direction = visibleItems.direction(
-                            from: currentPagingItem,
-                            to: pagingItem
-                        )
+                state = .scrolling(
+                    pagingItem: currentPagingItem,
+                    upcomingPagingItem: pagingItem,
+                    progress: 0,
+                    initialContentOffset: transition.contentOffset,
+                    distance: transition.distance
+                )
 
-                        delegate?.selectContent(
-                            pagingItem: pagingItem,
-                            direction: direction,
-                            animated: animated
-                        )
-                    } else {
-                        state = .selected(pagingItem: pagingItem)
+                let direction = visibleItems.direction(
+                    from: currentPagingItem,
+                    to: pagingItem
+                )
 
-                        reloadItems(around: pagingItem)
+                delegate?.selectContent(
+                    pagingItem: pagingItem,
+                    direction: direction,
+                    animated: animated
+                )
+            } else {
+                state = .selected(pagingItem: pagingItem)
 
-                        delegate?.selectContent(
-                            pagingItem: pagingItem,
-                            direction: .none,
-                            animated: false
-                        )
+                reloadItems(around: pagingItem)
 
-                        collectionView.selectItem(
-                            at: visibleItems.indexPath(for: pagingItem),
-                            animated: false,
-                            scrollPosition: options.scrollPosition
-                        )
-                    }
-                }
+                delegate?.selectContent(
+                    pagingItem: pagingItem,
+                    direction: .none,
+                    animated: false
+                )
+
+                collectionView.selectItem(
+                    at: visibleItems.indexPath(for: pagingItem, nearest: currentPagingItem),
+                    animated: false,
+                    scrollPosition: options.scrollPosition
+                )
             }
 
         default:
@@ -203,7 +204,7 @@ final class PagingController: NSObject {
             if collectionView.isDragging == false {
                 reloadItems(around: upcomingPagingItem)
                 collectionView.selectItem(
-                    at: visibleItems.indexPath(for: upcomingPagingItem),
+                    at: visibleItems.indexPath(for: upcomingPagingItem, nearest: pagingItem),
                     animated: options.menuTransition == .animateAfter,
                     scrollPosition: options.scrollPosition
                 )
@@ -486,10 +487,8 @@ final class PagingController: NSObject {
     /// items we need to append the items that are around the
     /// upcoming item so we can animate the transition.
     private func appendItemsIfNeeded(upcomingPagingItem: PagingItem?) {
-        if let upcomingPagingItem = upcomingPagingItem {
-            if visibleItems.contains(upcomingPagingItem) == false {
-                reloadItems(around: upcomingPagingItem, keepExisting: true)
-            }
+        if let upcomingPagingItem = upcomingPagingItem, !visibleItems.contains(upcomingPagingItem) {
+            reloadItems(around: upcomingPagingItem, keepExisting: true)
         }
     }
 
@@ -498,17 +497,14 @@ final class PagingController: NSObject {
 
         if keepExisting {
             // TODO: Document why we're doing all this.
-            var oldItems: [PagingItem] = []
-            for item in visibleItems.items {
-                if toItems.contains(where: { $0.isEqual(to: item)}) == false {
-                    oldItems.append(item)
-                }
+            let oldItems = visibleItems.items.filter { item in
+                !toItems.contains { $0.isEqual(to: item) }
             }
 
             if let lastItem = visibleItems.items.last, lastItem.isBefore(item: pagingItem) {
                 toItems = oldItems + toItems
             } else if let firstItem = visibleItems.items.first, pagingItem.isBefore(item: firstItem) {
-                toItems.append(contentsOf: oldItems)
+                toItems = toItems + oldItems
             }
         }
 

@@ -1,0 +1,11 @@
+name: "Parchment"
+on: [push]
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Unit Tests
+        run: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test
+      - name: UI Tests
+        run: xcodebuild -project Parchment.xcodeproj -scheme "ParchmentUITests" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test

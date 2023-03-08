@@ -11,7 +11,6 @@ final class MockPagingControllerDelegate: PagingMenuDelegate, Mock {
 
     func selectContent(pagingItem: PagingItem, direction: PagingDirection, animated: Bool) {
         calls.append(MockCall(
-            datetime: Date(),
             action: .delegate(.selectContent(
                 pagingItem: pagingItem as! Item,
                 direction: direction,
@@ -22,7 +21,6 @@ final class MockPagingControllerDelegate: PagingMenuDelegate, Mock {
 
     func removeContent() {
         calls.append(MockCall(
-            datetime: Date(),
             action: .delegate(.removeContent)
         ))
     }

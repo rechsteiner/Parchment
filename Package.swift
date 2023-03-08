@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.7
 import PackageDescription
 
 let package = Package(
@@ -10,12 +10,7 @@ let package = Package(
     targets: [
         .target(
             name: "Parchment",
-            path: "Parchment",
-            linkerSettings: [
-                .unsafeFlags([
-                    "-weak_framework", "SwiftUI",
-                ]),
-            ]
-        ),
+            path: "Parchment"
+        )
     ]
 )

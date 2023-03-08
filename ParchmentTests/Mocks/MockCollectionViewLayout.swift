@@ -17,14 +17,12 @@ final class MockCollectionViewLayout: CollectionViewLayout, Mock {
 
     func prepare() {
         calls.append(MockCall(
-            datetime: Date(),
             action: .collectionViewLayout(.prepare)
         ))
     }
 
     func invalidateLayout() {
         calls.append(MockCall(
-            datetime: Date(),
             action: .collectionViewLayout(.invalidateLayout)
         ))
     }
@@ -32,10 +30,9 @@ final class MockCollectionViewLayout: CollectionViewLayout, Mock {
     func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         let context = context as! PagingInvalidationContext
         calls.append(MockCall(
-            datetime: Date(),
             action: .collectionViewLayout(.invalidateLayoutWithContext(
                 invalidateSizes: context.invalidateSizes
-      ))
+            ))
         ))
     }
 }

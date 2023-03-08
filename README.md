@@ -10,9 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://circleci.com/gh/rechsteiner/Parchment"><img src="https://circleci.com/gh/rechsteiner/Parchment/tree/master.svg?style=shield&circle-token=8e4da6c8bf09271f72f32bf3c7a7c9d743ff50fb" /></a>
-  <a href="https://cocoapods.org/pods/Parchment"><img src="https://img.shields.io/cocoapods/v/Parchment.svg" /></a>
-  <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg" /></a>
+  <a href="https://github.com/rechsteiner/Parchment/actions/workflows/parchment.yml"><img src="https://github.com/rechsteiner/Parchment/actions/workflows/parchment.yml/badge.svg" /></a>
 </p>
 
 <br/>

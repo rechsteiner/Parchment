@@ -51,17 +51,13 @@ final class MockCollectionView: CollectionView, Mock {
     var contentOffset: CGPoint = .zero {
         didSet {
             calls.append(MockCall(
-                datetime: Date(),
                 action: .collectionView(.contentOffset(contentOffset))
             ))
         }
     }
 
     func reloadData() {
-        calls.append(MockCall(
-            datetime: Date(),
-            action: .collectionView(.reloadData)
-        ))
+        calls.append(MockCall(action: .collectionView(.reloadData)))
 
         let items = visibleItems()
         let range = 0 ..< items
@@ -90,15 +86,11 @@ final class MockCollectionView: CollectionView, Mock {
     }
 
     func layoutIfNeeded() {
-        calls.append(MockCall(
-            datetime: Date(),
-            action: .collectionView(.layoutIfNeeded)
-        ))
+        calls.append(MockCall(action: .collectionView(.layoutIfNeeded)))
     }
 
     func setContentOffset(_ contentOffset: CGPoint, animated: Bool) {
         calls.append(MockCall(
-            datetime: Date(),
             action: .collectionView(.setContentOffset(
                 contentOffset: contentOffset,
                 animated: animated
@@ -108,7 +100,6 @@ final class MockCollectionView: CollectionView, Mock {
 
     func selectItem(at indexPath: IndexPath?, animated: Bool, scrollPosition: UICollectionView.ScrollPosition) {
         calls.append(MockCall(
-            datetime: Date(),
             action: .collectionView(.selectItem(
                 indexPath: indexPath,
                 animated: animated,

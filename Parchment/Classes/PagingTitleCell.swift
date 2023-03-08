@@ -85,11 +85,7 @@ open class PagingTitleCell: PagingCell {
     open func configureAccessibility() {
         accessibilityIdentifier = viewModel?.title
         contentView.accessibilityLabel = viewModel?.title
-        if #available(iOS 10.0, *) {
-            contentView.accessibilityTraits = viewModel?.selected ?? false ? [.tabBar, .selected] : .tabBar
-        } else {
-            contentView.accessibilityTraits = viewModel?.selected ?? false ? .selected : .none
-        }
+        contentView.accessibilityTraits = viewModel?.selected ?? false ? [.tabBar, .selected] : .tabBar
     }
 
     open override func apply(_ layoutAttributes: UICollectionViewLayoutAttributes) {

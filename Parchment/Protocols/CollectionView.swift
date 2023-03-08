@@ -26,8 +26,6 @@ protocol CollectionView: AnyObject {
     var dataSource: UICollectionViewDataSource? { get set }
     var isScrollEnabled: Bool { get set }
     var alwaysBounceHorizontal: Bool { get set }
-
-    @available(iOS 11.0, *)
     var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior { get set }
 
     func register(_ cellClass: AnyClass?, forCellWithReuseIdentifier: String)

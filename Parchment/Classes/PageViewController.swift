@@ -113,8 +113,7 @@ public final class PageViewController: UIViewController {
         case .vertical:
             return false
         case .horizontal:
-            if #available(iOS 9.0, *),
-                UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft {
+            if UIView.userInterfaceLayoutDirection(for: view.semanticContentAttribute) == .rightToLeft {
                 return true
             } else {
                 return false
@@ -140,10 +139,7 @@ public final class PageViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(scrollView)
         scrollView.delegate = self
-
-        if #available(iOS 11.0, *) {
-            scrollView.contentInsetAdjustmentBehavior = .never
-        }
+        scrollView.contentInsetAdjustmentBehavior = .never
     }
 
     public override func viewWillLayoutSubviews() {

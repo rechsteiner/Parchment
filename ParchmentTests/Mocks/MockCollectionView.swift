@@ -35,7 +35,6 @@ final class MockCollectionView: CollectionView, Mock {
     var alwaysBounceHorizontal: Bool = false
 
     private var _contentInsetAdjustmentBehavior: Any?
-    @available(iOS 11.0, *)
     var contentInsetAdjustmentBehavior: UIScrollView.ContentInsetAdjustmentBehavior {
         get {
             if _contentInsetAdjustmentBehavior == nil {

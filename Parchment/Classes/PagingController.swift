@@ -349,10 +349,7 @@ final class PagingController: NSObject {
     private func configureCollectionView() {
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.dataSource = self
-
-        if #available(iOS 11.0, *) {
-            collectionView.contentInsetAdjustmentBehavior = .never
-        }
+        collectionView.contentInsetAdjustmentBehavior = .never
 
         configureMenuInteraction()
     }

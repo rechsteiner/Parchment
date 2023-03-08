@@ -101,7 +101,7 @@ open class PagingCollectionViewLayout: UICollectionViewLayout, PagingLayout {
     }
 
     private var safeAreaInsets: UIEdgeInsets {
-        if options.includeSafeAreaInsets, #available(iOS 11.0, *) {
+        if options.includeSafeAreaInsets {
             return view.safeAreaInsets
         } else {
             return .zero

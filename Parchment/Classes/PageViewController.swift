@@ -35,12 +35,6 @@ public final class PageViewController: UIViewController {
     public private(set) lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.isPagingEnabled = true
-        scrollView.autoresizingMask = [
-            .flexibleTopMargin,
-            .flexibleRightMargin,
-            .flexibleBottomMargin,
-            .flexibleLeftMargin,
-        ]
         scrollView.scrollsToTop = false
         scrollView.bounces = true
         scrollView.translatesAutoresizingMaskIntoConstraints = true
@@ -140,12 +134,19 @@ public final class PageViewController: UIViewController {
         view.addSubview(scrollView)
         scrollView.delegate = self
         scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+        ])
     }
 
-    public override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        scrollView.frame = view.bounds
-        manager.viewWillLayoutSubviews()
+    public override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        manager.viewDidLayoutSubviews()
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -301,10 +302,6 @@ extension PageViewController: PageViewManagerDelegate {
 
     func layoutViews(for viewControllers: [UIViewController], keepContentOffset: Bool) {
         let viewControllers = isRightToLeft ? viewControllers.reversed() : viewControllers
-
-        // Need to trigger a layout here to ensure that the scroll view
-        // bounds is updated before we use its frame for calculations.
-        view.layoutIfNeeded()
 
         for (index, viewController) in viewControllers.enumerated() {
             switch options.contentNavigationOrientation {

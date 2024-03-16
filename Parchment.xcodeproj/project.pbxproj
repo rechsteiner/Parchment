@@ -136,6 +136,7 @@
 		95FEEA4D2423C44A009B5B64 /* MockPageViewManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEEA4C2423C44A009B5B64 /* MockPageViewManagerDelegate.swift */; };
 		95FEEA4F2423F213009B5B64 /* PageViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEEA4E2423F213009B5B64 /* PageViewManager.swift */; };
 		95FEEA512423F752009B5B64 /* MockPageViewManagerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEEA502423F752009B5B64 /* MockPageViewManagerDataSource.swift */; };
+		DAD34A632BA5B08900069395 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = DAD34A622BA5B08900069395 /* README.md */; };
 		E8CB720A23D70E1400A9B089 /* PagingMenuPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8CB720923D70E1400A9B089 /* PagingMenuPosition.swift */; };
 /* End PBXBuildFile section */
 
@@ -336,6 +337,7 @@
 		95FEEA4C2423C44A009B5B64 /* MockPageViewManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPageViewManagerDelegate.swift; sourceTree = "<group>"; };
 		95FEEA4E2423F213009B5B64 /* PageViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewManager.swift; sourceTree = "<group>"; };
 		95FEEA502423F752009B5B64 /* MockPageViewManagerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPageViewManagerDataSource.swift; sourceTree = "<group>"; };
+		DAD34A622BA5B08900069395 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E8CB720923D70E1400A9B089 /* PagingMenuPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuPosition.swift; sourceTree = "<group>"; };
 		E9D1BE1D211E409400E86B72 /* PagingMenuItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingMenuItemSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -475,6 +477,7 @@
 		3EA04A411C53BFE40054E5E0 = {
 			isa = PBXGroup;
 			children = (
+				DAD34A622BA5B08900069395 /* README.md */,
 				3EA04A4D1C53BFE40054E5E0 /* Parchment */,
 				3E504EC51C7465B000AE1CE3 /* ParchmentTests */,
 				95D2AE42242BC1FA00AC3D46 /* ParchmentUITests */,
@@ -878,7 +881,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				ORGANIZATIONNAME = "Martin Rechsteiner";
 				TargetAttributes = {
 					3E504EC31C7465B000AE1CE3 = {
@@ -944,6 +947,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAD34A632BA5B08900069395 /* README.md in Resources */,
 				95ED82642B5056AC0055227B /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1225,6 +1229,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1286,6 +1291,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;

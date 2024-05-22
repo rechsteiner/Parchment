@@ -154,8 +154,8 @@ final class PageViewManager {
         }
     }
 
-    func viewWillLayoutSubviews() {
-        layoutsViews()
+    func viewDidLayoutSubviews() {
+        layoutsViews(keepContentOffset: false)
     }
 
     func viewWillAppear(_ animated: Bool) {
@@ -170,7 +170,7 @@ final class PageViewManager {
 
         switch state {
         case .center, .first, .last, .single:
-            layoutsViews()
+            layoutsViews(keepContentOffset: false)
         case .empty:
             break
         }

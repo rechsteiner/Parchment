@@ -131,3 +131,32 @@ final class ExamplesViewController: UITableViewController {
         dismiss(animated: true)
     }
 }
+
+final class NavigationController: UINavigationController {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = .systemBlue
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationBar.tintColor = .white
+        navigationBar.standardAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+    }
+
+    // For debugging purposes. Adds a hook to push a new view
+    // controller to debug navigation controller related issues.
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            let viewController = UIViewController()
+            viewController.title = "Page"
+            viewController.view.backgroundColor = .white
+            pushViewController(viewController, animated: true)
+        }
+    }
+}

@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 protocol PageViewManagerDelegate: AnyObject {
     func scrollForward()
     func scrollReverse()

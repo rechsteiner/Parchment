@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 struct PagingDistance {
     private let view: CollectionView
     private let hasItemsBefore: Bool

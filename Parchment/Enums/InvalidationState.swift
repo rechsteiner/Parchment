@@ -6,6 +6,7 @@ import UIKit
 /// called and we can use we can use this to determine exactly how
 /// much we need to invalidate by adding together the states each
 /// time a new context is invalidated.
+@MainActor
 public enum InvalidationState {
     case nothing
     case everything

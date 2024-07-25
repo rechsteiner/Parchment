@@ -25,6 +25,7 @@ import SwiftUI
 /// initializers are closures that return the view hierarchy for
 /// the header and body of the page, respectively.
 @available(iOS 14.0, *)
+@MainActor
 public struct Page {
     let reuseIdentifier: String
     let pageIdentifier: String?

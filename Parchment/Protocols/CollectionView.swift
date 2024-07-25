@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 protocol CollectionViewLayout: AnyObject {
     var state: PagingState { get set }
     var visibleItems: PagingItems { get set }

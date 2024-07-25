@@ -8,6 +8,7 @@ public protocol PageViewControllerDataSource: AnyObject {
     /// - Parameters:
     ///   - pageViewController: The `PageViewController` instance.
     ///   - viewController: The current view controller.
+    @MainActor
     func pageViewController(
         _ pageViewController: PageViewController,
         viewControllerBeforeViewController viewController: UIViewController
@@ -18,6 +19,7 @@ public protocol PageViewControllerDataSource: AnyObject {
     /// - Parameters:
     ///   - pageViewController: The `PageViewController` instance.
     ///   - viewController: The current view controller.
+    @MainActor
     func pageViewController(
         _ pageViewController: PageViewController,
         viewControllerAfterViewController viewController: UIViewController

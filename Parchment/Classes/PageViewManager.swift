@@ -1,5 +1,6 @@
 import UIKit
 
+@MainActor
 final class PageViewManager {
     weak var dataSource: PageViewManagerDataSource?
     weak var delegate: PageViewManagerDelegate?

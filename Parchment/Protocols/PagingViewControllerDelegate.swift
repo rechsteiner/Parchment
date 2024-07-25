@@ -14,6 +14,7 @@ public protocol PagingViewControllerDelegate: AnyObject {
     /// - Parameter destinationViewController: The view controller for
     /// the upcoming paging item
     /// - Parameter progress: The progress of the scroll transition
+    @MainActor
     func pagingViewController(
         _: PagingViewController,
         isScrollingFromItem currentPagingItem: PagingItem,
@@ -30,6 +31,7 @@ public protocol PagingViewControllerDelegate: AnyObject {
     /// current paging item
     /// - Parameter destinationViewController: The view controller for
     /// the upcoming paging item
+    @MainActor
     func pagingViewController(
         _: PagingViewController,
         willScrollToItem pagingItem: PagingItem,
@@ -46,6 +48,7 @@ public protocol PagingViewControllerDelegate: AnyObject {
     /// the upcoming paging item
     /// - Parameter transitionSuccessful: Boolean that indicates whether
     /// the transition to the paging item was successful or not
+    @MainActor
     func pagingViewController(
         _ pagingViewController: PagingViewController,
         didScrollToItem pagingItem: PagingItem,
@@ -58,6 +61,7 @@ public protocol PagingViewControllerDelegate: AnyObject {
     ///
     /// - Parameter pagingViewController: The `PagingViewController` instance
     /// - Parameter pagingItem: The item that was selected.
+    @MainActor
     func pagingViewController(
         _ pagingViewController: PagingViewController,
         didSelectItem pagingItem: PagingItem

@@ -1,6 +1,7 @@
 import UIKit
 
 @available(iOS 14.0, *)
+@MainActor
 final class PageViewCoordinator: PagingViewControllerDataSource, PagingViewControllerDelegate {
     final class WeakReference<T: AnyObject> {
         weak var value: T?

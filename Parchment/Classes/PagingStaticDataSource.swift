@@ -1,7 +1,8 @@
 import Foundation
 import UIKit
 
-class PagingStaticDataSource: PagingViewControllerInfiniteDataSource {
+@MainActor
+final class PagingStaticDataSource: PagingViewControllerInfiniteDataSource {
     private(set) var items: [PagingItem] = []
     private let viewControllers: [UIViewController]
 

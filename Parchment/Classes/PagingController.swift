@@ -1,6 +1,7 @@
 import UIKit
 
 protocol PagingControllerSizeDelegate: AnyObject {
+    @MainActor
     func width(for: PagingItem, isSelected: Bool) -> CGFloat
 }
 

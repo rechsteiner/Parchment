@@ -13,6 +13,7 @@ public protocol PageViewControllerDelegate: AnyObject {
     ///   scrolling from.
     ///   - destinationViewController: The view controller the user is
     ///   scrolling towards.
+    @MainActor
     func pageViewController(
         _ pageViewController: PageViewController,
         willStartScrollingFrom startingViewController: UIViewController,
@@ -30,6 +31,7 @@ public protocol PageViewControllerDelegate: AnyObject {
     ///   towards one of the edges.
     ///   - progress: The progress of the scroll transition. Between 0
     ///   and 1.
+    @MainActor
     func pageViewController(
         _ pageViewController: PageViewController,
         isScrollingFrom startingViewController: UIViewController,
@@ -47,6 +49,7 @@ public protocol PageViewControllerDelegate: AnyObject {
     ///   scrolling towards.
     ///   - transitionSuccessful: A boolean indicating whether the
     ///   transition completed, or was cancelled by the user.
+    @MainActor
     func pageViewController(
         _ pageViewController: PageViewController,
         didFinishScrollingFrom startingViewController: UIViewController,

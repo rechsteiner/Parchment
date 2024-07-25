@@ -1,6 +1,7 @@
 import Foundation
 @testable import Parchment
 
+@MainActor
 func createDistance(
     bounds: CGRect = .zero,
     contentSize: CGSize? = nil,

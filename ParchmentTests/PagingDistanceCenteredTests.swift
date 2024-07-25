@@ -1,6 +1,7 @@
 @testable import Parchment
 import XCTest
 
+@MainActor
 final class PagingDistanceCenteredTests: XCTestCase {
     private var sizeCache: PagingSizeCache!
 

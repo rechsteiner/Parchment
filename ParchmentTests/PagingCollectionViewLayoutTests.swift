@@ -2,6 +2,7 @@
 import UIKit
 import XCTest
 
+@MainActor
 final class PagingCollectionViewLayoutTests: XCTestCase {
     private var window: UIWindow!
     private var options: PagingOptions!

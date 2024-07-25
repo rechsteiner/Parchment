@@ -14,6 +14,7 @@ protocol CollectionViewLayout: AnyObject {
 
 extension PagingCollectionViewLayout: CollectionViewLayout {}
 
+@MainActor
 protocol CollectionView: AnyObject {
     var indexPathsForVisibleItems: [IndexPath] { get }
     var isDragging: Bool { get }

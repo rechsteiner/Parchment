@@ -2,6 +2,7 @@ import Foundation
 @testable import Parchment
 import XCTest
 
+@MainActor
 final class PageViewManagerTests: XCTestCase {
     var dataSource: MockPageViewManagerDataSource!
     var delegate: MockPageViewManagerDelegate!

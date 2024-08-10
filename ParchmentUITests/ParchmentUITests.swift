@@ -1,5 +1,6 @@
 import XCTest
 
+@MainActor
 final class ParchmentUITests: XCTestCase {
     var app: XCUIApplication!
 

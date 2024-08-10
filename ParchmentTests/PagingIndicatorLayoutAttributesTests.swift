@@ -2,6 +2,7 @@ import Foundation
 @testable import Parchment
 import XCTest
 
+@MainActor
 final class PagingIndicatorLayoutAttributesTests: XCTestCase {
     let layoutAttributes = PagingIndicatorLayoutAttributes()
     var options = PagingOptions()

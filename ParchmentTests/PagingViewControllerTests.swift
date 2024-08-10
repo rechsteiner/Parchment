@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import XCTest
 
+@MainActor
 final class PagingViewControllerTests: XCTestCase {
     func testReloadMenu() {
         // Arrange

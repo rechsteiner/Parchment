@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import XCTest
 
+@MainActor
 final class PagingViewControllerDelegateTests: XCTestCase {
     func testDidSelectItem() {
         let viewController0 = UIViewController()

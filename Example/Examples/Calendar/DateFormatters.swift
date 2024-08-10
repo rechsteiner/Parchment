@@ -1,20 +1,20 @@
 import Foundation
 
 struct DateFormatters {
-    static var shortDateFormatter: DateFormatter = {
+    static let shortDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = .none
         dateFormatter.dateStyle = .short
         return dateFormatter
     }()
 
-    static var dateFormatter: DateFormatter = {
+    static let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d"
         return dateFormatter
     }()
 
-    static var weekdayFormatter: DateFormatter = {
+    static let weekdayFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEE"
         return dateFormatter

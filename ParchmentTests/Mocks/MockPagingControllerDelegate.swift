@@ -1,6 +1,7 @@
 import Foundation
 @testable import Parchment
 
+@MainActor
 final class MockPagingControllerDelegate: PagingMenuDelegate, Mock {
     enum Action: Equatable {
         case selectContent(pagingItem: Item, direction: PagingDirection, animated: Bool)

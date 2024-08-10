@@ -1,6 +1,7 @@
 @testable import Parchment
 import XCTest
 
+@MainActor
 final class PagingViewTests: XCTestCase {
     var pagingView: PagingView!
     var collectionView: UICollectionView!

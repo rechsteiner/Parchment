@@ -1,6 +1,7 @@
 @testable import Parchment
 import UIKit
 
+@MainActor
 final class MockCollectionView: CollectionView, Mock {
     enum Action: Equatable {
         case contentOffset(CGPoint)

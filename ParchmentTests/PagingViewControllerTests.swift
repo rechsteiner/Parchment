@@ -377,21 +377,6 @@ final class PagingViewControllerTests: XCTestCase {
         XCTAssertEqual(pagingViewController.collectionView.indexPathsForSelectedItems, [IndexPath(item: 1, section: 0)])
         XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item1))
     }
-
-    // FIXME: Disabled as it fails on CI
-    func xtestRetainCycles() {
-        var instance: DeinitPagingViewController? = DeinitPagingViewController()
-        let expectation = XCTestExpectation()
-
-        instance?.deinitCalled = {
-            expectation.fulfill()
-        }
-        DispatchQueue.global(qos: .background).async {
-            instance = nil
-        }
-
-        wait(for: [expectation], timeout: 2)
-    }
 }
 
 private class DataSource: PagingViewControllerInfiniteDataSource {
@@ -425,11 +410,6 @@ private class SizeDelegate: PagingViewControllerSizeDelegate {
             return 50
         }
     }
-}
-
-private class DeinitPagingViewController: PagingViewController {
-    var deinitCalled: (() -> Void)?
-    deinit { deinitCalled?() }
 }
 
 private class ReloadingDataSource: PagingViewControllerDataSource {

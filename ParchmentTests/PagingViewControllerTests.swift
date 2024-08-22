@@ -1,11 +1,11 @@
 import Foundation
-@testable import Parchment
 import UIKit
-import XCTest
+import Testing
+@testable import Parchment
 
 @MainActor
-final class PagingViewControllerTests: XCTestCase {
-    func testReloadMenu() {
+final class PagingViewControllerTests {
+    @Test func reloadMenu() {
         // Arrange
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
@@ -40,15 +40,15 @@ final class PagingViewControllerTests: XCTestCase {
         // Updates the cells
         let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ItemCell
         let cell3 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? ItemCell
-        XCTAssertEqual(pagingViewController.collectionView.numberOfItems(inSection: 0), 2)
-        XCTAssertEqual(cell2?.item, item2)
-        XCTAssertEqual(cell3?.item, item3)
+        #expect(pagingViewController.collectionView.numberOfItems(inSection: 0) == 2)
+        #expect(cell2?.item == item2)
+        #expect(cell3?.item == item3)
 
         // Should not updated the view controllers
-        XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController0)
+        #expect(pagingViewController.pageViewController.selectedViewController == viewController0)
     }
 
-    func testReloadData() {
+    @Test func reloadData() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let viewController0 = UIViewController()
@@ -82,13 +82,13 @@ final class PagingViewControllerTests: XCTestCase {
         let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ItemCell
         let cell3 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? ItemCell
 
-        XCTAssertEqual(cell2?.item, item2)
-        XCTAssertEqual(cell3?.item, item3)
-        XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item2))
-        XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController2)
+        #expect(cell2?.item == item2)
+        #expect(cell3?.item == item3)
+        #expect(pagingViewController.state == PagingState.selected(pagingItem: item2))
+        #expect(pagingViewController.pageViewController.selectedViewController == viewController2)
     }
 
-    func testReloadDataSameItemsUpdatesViewControllers() {
+    @Test func reloadDataSameItemsUpdatesViewControllers() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let viewController0 = UIViewController()
@@ -116,10 +116,10 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.view.layoutIfNeeded()
 
         // Assert
-        XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController2)
+        #expect(pagingViewController.pageViewController.selectedViewController == viewController2)
     }
 
-    func testReloadDataSelectsPreviouslySelectedItem() {
+    @Test func reloadDataSelectsPreviouslySelectedItem() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let item0 = Item(index: 0)
@@ -158,13 +158,13 @@ final class PagingViewControllerTests: XCTestCase {
         let cell1 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? ItemCell
         let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 2, section: 0)) as? ItemCell
 
-        XCTAssertEqual(cell0?.item, item0)
-        XCTAssertEqual(cell1?.item, item1)
-        XCTAssertEqual(cell2?.item, item2)
-        XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item1))
+        #expect(cell0?.item == item0)
+        #expect(cell1?.item == item1)
+        #expect(cell2?.item == item2)
+        #expect(pagingViewController.state == PagingState.selected(pagingItem: item1))
     }
 
-    func testReloadDataSelectsFirstItemForAllNewAllItems() {
+    @Test func reloadDataSelectsFirstItemForAllNewAllItems() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let viewController0 = UIViewController()
@@ -198,12 +198,12 @@ final class PagingViewControllerTests: XCTestCase {
         let cell2 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ItemCell
         let cell3 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? ItemCell
 
-        XCTAssertEqual(cell2?.item, item2)
-        XCTAssertEqual(cell3?.item, item3)
-        XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item2))
+        #expect(cell2?.item == item2)
+        #expect(cell3?.item == item3)
+        #expect(pagingViewController.state == PagingState.selected(pagingItem: item2))
     }
 
-    func testReloadDataDisplayEmptyViewForNoItems() {
+    @Test func reloadDataDisplayEmptyViewForNoItems() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let pagingViewController = PagingViewController()
@@ -219,11 +219,11 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.reloadData()
 
         // Assert
-        XCTAssertEqual(pagingViewController.pageViewController.scrollView.subviews, [])
-        XCTAssertEqual(pagingViewController.collectionView.numberOfItems(inSection: 0), 0)
+        #expect(pagingViewController.pageViewController.scrollView.subviews == [])
+        #expect(pagingViewController.collectionView.numberOfItems(inSection: 0) == 0)
     }
 
-    func testReloadDataEmptyBeforeUsesWidthDelegate() {
+    @Test func reloadDataEmptyBeforeUsesWidthDelegate() {
         // Arrange
         let dataSource = ReloadingDataSource()
         let delegate = SizeDelegate()
@@ -249,13 +249,13 @@ final class PagingViewControllerTests: XCTestCase {
         let cell0 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 0, section: 0)) as? ItemCell
         let cell1 = pagingViewController.collectionView.cellForItem(at: IndexPath(item: 1, section: 0)) as? ItemCell
 
-        XCTAssertEqual(cell0?.item, item0)
-        XCTAssertEqual(cell1?.item, item1)
-        XCTAssertEqual(cell0?.bounds.width, 100)
-        XCTAssertEqual(cell1?.bounds.width, 50)
+        #expect(cell0?.item == item0)
+        #expect(cell1?.item == item1)
+        #expect(cell0?.bounds.width == 100)
+        #expect(cell1?.bounds.width == 50)
     }
 
-    func selectFirstPagingItem() {
+    @Test func selectFirstPagingItem() {
         // Arrange
         let dataSource = DataSource()
         let pagingViewController = PagingViewController()
@@ -263,7 +263,7 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
         pagingViewController.infiniteDataSource = dataSource
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 1000))
         window.rootViewController = pagingViewController
         window.makeKeyAndVisible()
         pagingViewController.view.layoutIfNeeded()
@@ -273,10 +273,10 @@ final class PagingViewControllerTests: XCTestCase {
 
         // Assert
         let items = pagingViewController.collectionView.numberOfItems(inSection: 0)
-        XCTAssertEqual(items, 21)
+        #expect(items == 21)
     }
 
-    func selectCenterPagingItem() {
+    @Test func selectCenterPagingItem() {
         // Arrange
         let dataSource = DataSource()
         let pagingViewController = PagingViewController()
@@ -284,7 +284,7 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
         pagingViewController.infiniteDataSource = dataSource
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 1000))
         window.rootViewController = pagingViewController
         window.makeKeyAndVisible()
         pagingViewController.view.layoutIfNeeded()
@@ -294,10 +294,10 @@ final class PagingViewControllerTests: XCTestCase {
 
         // Assert
         let items = pagingViewController.collectionView.numberOfItems(inSection: 0)
-        XCTAssertEqual(items, 21)
+        #expect(items == 21)
     }
 
-    func selectLastPagingIteme() {
+    @Test func selectLastPagingItem() {
         // Arrange
         let dataSource = DataSource()
         let pagingViewController = PagingViewController()
@@ -305,7 +305,7 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.menuItemSize = .fixed(width: 100, height: 50)
         pagingViewController.infiniteDataSource = dataSource
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 1000))
         window.rootViewController = pagingViewController
         window.makeKeyAndVisible()
         pagingViewController.view.layoutIfNeeded()
@@ -315,10 +315,10 @@ final class PagingViewControllerTests: XCTestCase {
 
         // Assert
         let items = pagingViewController.collectionView.numberOfItems(inSection: 0)
-        XCTAssertEqual(items, 21)
+        #expect(items == 21)
     }
 
-    func testSelectIndexBeforeInitialRender() {
+    @Test func selectIndexBeforeInitialRender() {
         // Arrange
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
@@ -342,12 +342,12 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.view.layoutIfNeeded()
 
         // Assert
-        XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController1)
-        XCTAssertEqual(pagingViewController.collectionView.indexPathsForSelectedItems, [IndexPath(item: 1, section: 0)])
-        XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item1))
+        #expect(pagingViewController.pageViewController.selectedViewController == viewController1)
+        #expect(pagingViewController.collectionView.indexPathsForSelectedItems == [IndexPath(item: 1, section: 0)])
+        #expect(pagingViewController.state == PagingState.selected(pagingItem: item1))
     }
 
-    func testReloadDataBeforeInitialRender() {
+    @Test func reloadDataBeforeInitialRender() {
         // Arrange
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
@@ -368,15 +368,15 @@ final class PagingViewControllerTests: XCTestCase {
         pagingViewController.reloadData()
         pagingViewController.select(index: 1)
 
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 1000, height: 1000))
         window.rootViewController = pagingViewController
         window.makeKeyAndVisible()
         pagingViewController.view.layoutIfNeeded()
 
         // Assert
-        XCTAssertEqual(pagingViewController.pageViewController.selectedViewController, viewController1)
-        XCTAssertEqual(pagingViewController.collectionView.indexPathsForSelectedItems, [IndexPath(item: 1, section: 0)])
-        XCTAssertEqual(pagingViewController.state, PagingState.selected(pagingItem: item1))
+        #expect(pagingViewController.pageViewController.selectedViewController == viewController1)
+        #expect(pagingViewController.collectionView.indexPathsForSelectedItems == [IndexPath(item: 1, section: 0)])
+        #expect(pagingViewController.state == PagingState.selected(pagingItem: item1))
     }
 }
 

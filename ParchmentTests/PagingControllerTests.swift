@@ -1,32 +1,35 @@
 import Foundation
-import XCTest
+import Testing
 @testable import Parchment
 
-final class PagingControllerTests: XCTestCase {
+@MainActor
+final class PagingControllerTests {
     static let ItemSize: CGFloat = 50
 
-    var options: PagingOptions!
-    var collectionView: MockCollectionView!
-    var collectionViewLayout: MockCollectionViewLayout!
-    var dataSource: MockPagingControllerDataSource!
-    var delegate: MockPagingControllerDelegate!
-    var sizeDelegate: MockPagingControllerSizeDelegate?
-    var pagingController: PagingController!
+    private let options: PagingOptions
+    private let collectionView: MockCollectionView
+    private let collectionViewLayout: MockCollectionViewLayout
+    private let dataSource: MockPagingControllerDataSource
+    private let delegate: MockPagingControllerDelegate
+    private var sizeDelegate: MockPagingControllerSizeDelegate?
+    private let pagingController: PagingController
+    private let window: UIWindow
 
-    @MainActor
-    override func setUp() {
-        options = PagingOptions()
+    init() {
+        var options = PagingOptions()
         options.selectedScrollPosition = .left
         options.menuItemSize = .fixed(
             width: PagingControllerTests.ItemSize,
             height: PagingControllerTests.ItemSize
         )
+        self.options = options
 
+        window = UIWindow(frame: .zero)
         collectionViewLayout = MockCollectionViewLayout()
         collectionView = MockCollectionView()
         collectionView.superview = UIView(frame: .zero)
         collectionView.collectionViewLayout = collectionViewLayout
-        collectionView.window = UIWindow(frame: .zero)
+        collectionView.window = window
         collectionView.bounds = CGRect(
             origin: .zero,
             size: CGSize(
@@ -34,24 +37,25 @@ final class PagingControllerTests: XCTestCase {
                 height: PagingControllerTests.ItemSize
             )
         )
-        collectionView.visibleItems = {
-            self.pagingController.visibleItems.items.count
-        }
 
         dataSource = MockPagingControllerDataSource()
         delegate = MockPagingControllerDelegate()
 
-        pagingController = PagingController(options: options)
+        let pagingController = PagingController(options: options)
         pagingController.collectionView = collectionView
         pagingController.collectionViewLayout = collectionViewLayout
         pagingController.dataSource = dataSource
         pagingController.delegate = delegate
+        self.pagingController = pagingController
+
+        collectionView.visibleItems = {
+            pagingController.visibleItems.items.count
+        }
     }
 
     // MARK: - Content scrolled
 
-    @MainActor
-    func testContentScrolledFromSelectedProgressPositive() {
+    @Test func contentScrolledFromSelectedProgressPositive() {
         // Select the first item.
         pagingController.select(pagingItem: Item(index: 3), animated: false)
 
@@ -63,7 +67,7 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: 0.5)
 
         // Expect to enter the .scrolling state and update the content offset
-        XCTAssertEqual(pagingController.state, PagingState.scrolling(
+        #expect(pagingController.state == PagingState.scrolling(
             pagingItem: Item(index: 3),
             upcomingPagingItem: Item(index: 4),
             progress: 0.5,
@@ -75,7 +79,7 @@ final class PagingControllerTests: XCTestCase {
         // collection view layout to ensure that they were called in
         // the correct order.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.setContentOffset(
                 contentOffset: CGPoint(x: 125, y: 0),
                 animated: false
@@ -86,8 +90,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testContentScrolledFromSelectedProgressNegative() {
+    @Test func contentScrolledFromSelectedProgressNegative() {
         // Select the first item.
         pagingController.select(pagingItem: Item(index: 3), animated: false)
 
@@ -99,7 +102,7 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: -0.1)
 
         // Expect to enter the .scrolling state and update the content offset
-        XCTAssertEqual(pagingController.state, PagingState.scrolling(
+        #expect(pagingController.state == PagingState.scrolling(
             pagingItem: Item(index: 3),
             upcomingPagingItem: Item(index: 2),
             progress: -0.1,
@@ -111,7 +114,7 @@ final class PagingControllerTests: XCTestCase {
         // collection view layout to ensure that they were called in
         // the correct order.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.setContentOffset(
                 contentOffset: CGPoint(x: 95, y: 0),
                 animated: false
@@ -122,8 +125,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testContentOffsetFromSelectedProgressZero() {
+    @Test func contentOffsetFromSelectedProgressZero() {
         // Select the first item.
         pagingController.select(pagingItem: Item(index: 3), animated: false)
 
@@ -135,15 +137,14 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: 0)
 
         // Expect to not update the state or call any methods.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 3)
         ))
     }
 
-    @MainActor
-    func testContentScrolledNoUpcomingPagingItem() {
+    @Test func contentScrolledNoUpcomingPagingItem() {
         // Prevent the data source from returning an upcoming item.
         dataSource.maxIndexAfter = 3
 
@@ -159,15 +160,14 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect that the content offset is not updated.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionViewLayout(.invalidateLayoutWithContext(
                 invalidateSizes: false
             )),
         ])
     }
 
-    @MainActor
-    func testContentScrolledSizeDelegate() {
+    @Test func contentScrolledSizeDelegate() {
         // Setup the size delegate.
         sizeDelegate = MockPagingControllerSizeDelegate()
         sizeDelegate?.pagingItemWidth = { 100 }
@@ -181,13 +181,12 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it to invalidate the collection view layout sizes.
         let action = collectionViewLayout.calls.last?.action
-        XCTAssertEqual(action, .collectionViewLayout(.invalidateLayoutWithContext(
+        #expect(action == .collectionViewLayout(.invalidateLayoutWithContext(
             invalidateSizes: true
         )))
     }
 
-    @MainActor
-    func testContentScrolledNoUpcomingPagingItemAndSizeDelegate() {
+    @Test func contentScrolledNoUpcomingPagingItemAndSizeDelegate() {
         // Prevent the data source from returning an upcoming item.
         dataSource.maxIndexAfter = 3
 
@@ -208,15 +207,14 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it does not update the content offset or invalidate the sizes.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionViewLayout(.invalidateLayoutWithContext(
                 invalidateSizes: false
             )),
         ])
     }
 
-    @MainActor
-    func testContentScrolledUpcomingItemOutsideVisibleItems() {
+    @Test func contentScrolledUpcomingItemOutsideVisibleItems() {
         // Select the first item, and scroll to the edge of the
         // collection view a few times to make sure the selected
         // item is no longer in view.
@@ -239,7 +237,7 @@ final class PagingControllerTests: XCTestCase {
         // The visible items should now contain the items that were
         // visible before scrolling (6..10), plus the items around
         // the selected item (0...4).
-        XCTAssertEqual(pagingController.visibleItems.items as? [Item], [
+        #expect(pagingController.visibleItems.items as? [Item] == [
             Item(index: 0),
             Item(index: 1),
             Item(index: 2),
@@ -256,7 +254,7 @@ final class PagingControllerTests: XCTestCase {
         // collection view layout to ensure that they were called in
         // the correct order.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.reloadData),
             .collectionViewLayout(.prepare),
             .collectionView(.contentOffset(CGPoint(x: 400, y: 0))),
@@ -271,8 +269,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testContentScrolledProgressChangedFromPositiveToNegative() {
+    @Test func contentScrolledProgressChangedFromPositiveToNegative() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 1), animated: false)
         pagingController.contentScrolled(progress: 0.1)
@@ -285,15 +282,14 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: -0.1)
 
         // Expect that it enters the selected state.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 1)
         ))
     }
 
-    @MainActor
-    func testContentScrolledProgressChangedFromNegativeToPositive() {
+    @Test func contentScrolledProgressChangedFromNegativeToPositive() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 1), animated: false)
         pagingController.contentScrolled(progress: -0.1)
@@ -306,15 +302,14 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: 0.1)
 
         // Expect that it enters the selected state.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 1)
         ))
     }
 
-    @MainActor
-    func testContentScrolledProgressChangedToZero() {
+    @Test func contentScrolledProgressChangedToZero() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 1), animated: false)
         pagingController.contentScrolled(progress: -0.1)
@@ -327,15 +322,14 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: 0)
 
         // Expect that it enters the selected state.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 1)
         ))
     }
 
-    @MainActor
-    func testContentScrolledProgressChangedSameSign() {
+    @Test func contentScrolledProgressChangedSameSign() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 1), animated: false)
         pagingController.contentScrolled(progress: 0.1)
@@ -348,7 +342,7 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentScrolled(progress: 0.2)
 
         // Expect it to update the scrolling state and update the content offset.
-        XCTAssertEqual(pagingController.state, PagingState.scrolling(
+        #expect(pagingController.state == PagingState.scrolling(
             pagingItem: Item(index: 1),
             upcomingPagingItem: Item(index: 2),
             progress: 0.2,
@@ -360,7 +354,7 @@ final class PagingControllerTests: XCTestCase {
         // collection view layout to ensure that they were called in
         // the correct order.
         let actions = combinedActions(collectionView.calls, collectionViewLayout.calls)
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.setContentOffset(
                 contentOffset: CGPoint(x: 110, y: 0),
                 animated: false
@@ -373,20 +367,18 @@ final class PagingControllerTests: XCTestCase {
 
     // MARK: - Select item
 
-    @MainActor
-    func testSelectWhileEmpty() {
+    @Test func selectWhileEmpty() {
         // Make sure there is no item before index 0.
         dataSource.minIndexBefore = 0
 
-        // Make sure we have a superview and window
+        // Make sure we have a superview 
         collectionView.superview = UIView(frame: .zero)
-        collectionView.window = UIWindow(frame: .zero)
 
         // Select the first item.
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
         // Expect it to enter selected state.
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 0)
         ))
 
@@ -399,7 +391,7 @@ final class PagingControllerTests: XCTestCase {
             delegate.calls
         )
 
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.reloadData),
             .collectionViewLayout(.prepare),
             .collectionView(.contentOffset(.zero)),
@@ -418,8 +410,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testSelectWhileEmptyAndNoSuperview() {
+    @Test func selectWhileEmptyAndNoSuperview() {
         // Remove the superview.
         collectionView.superview = nil
 
@@ -427,16 +418,15 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
         // Expect it to enter the selected state with no actions.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(delegate.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(delegate.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 0)
         ))
     }
 
-    @MainActor
-    func testSelectWhileEmptyAndNoWindow() {
+    @Test func selectWhileEmptyAndNoWindow() {
         // Remove the window and make sure we have a superview.
         collectionView.superview = UIView(frame: .zero)
         collectionView.window = nil
@@ -444,16 +434,15 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
         // Expect it to enter the selected state with no actions.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(delegate.calls, [])
-        XCTAssertEqual(pagingController.state, PagingState.selected(
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(delegate.calls == [])
+        #expect(pagingController.state == PagingState.selected(
             pagingItem: Item(index: 0)
         ))
     }
 
-    @MainActor
-    func testSelectItemWhileScrolling() {
+    @Test func selectItemWhileScrolling() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 1), animated: false)
         pagingController.contentScrolled(progress: -0.1)
@@ -468,14 +457,13 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 2), animated: false)
 
         // Expect it do not change the state.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(delegate.calls, [])
-        XCTAssertEqual(pagingController.state, oldState)
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(delegate.calls == [])
+        #expect(pagingController.state == oldState)
     }
 
-    @MainActor
-    func testSelectSameItem() {
+    @Test func selectSameItem() {
         // Select an item and enter the scrolling state.
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
@@ -489,14 +477,13 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
         // Expect it do not change the state.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(delegate.calls, [])
-        XCTAssertEqual(pagingController.state, oldState)
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(delegate.calls == [])
+        #expect(pagingController.state == oldState)
     }
 
-    @MainActor
-    func testSelectDifferentItem() {
+    @Test func selectDifferentItem() {
         // Make sure there is no item before index 0.
         dataSource.minIndexBefore = 0
 
@@ -512,7 +499,7 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 0), animated: true)
 
         // Expect it to enter the scrolling state.
-        XCTAssertEqual(pagingController.state, PagingState.scrolling(
+        #expect(pagingController.state == PagingState.scrolling(
             pagingItem: Item(index: 1),
             upcomingPagingItem: Item(index: 0),
             progress: 0,
@@ -521,8 +508,7 @@ final class PagingControllerTests: XCTestCase {
         ))
     }
 
-    @MainActor
-    func testSelectPreviousSibling() {
+    @Test func selectPreviousSibling() {
         // Make sure there is no item before index 0.
         dataSource.minIndexBefore = 0
 
@@ -538,9 +524,9 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 0), animated: true)
 
         // Expect it to select the previous content view.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(actions(delegate.calls), [
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(actions(delegate.calls) == [
             .delegate(.selectContent(
                 pagingItem: Item(index: 0),
                 direction: .reverse(sibling: true),
@@ -549,8 +535,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testSelectNextSibling() {
+    @Test func selectNextSibling() {
         // Make sure there is no item before index 0.
         dataSource.minIndexBefore = 0
 
@@ -566,9 +551,9 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 2), animated: true)
 
         // Expect it to select the previous content view.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(actions(delegate.calls), [
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(actions(delegate.calls) == [
             .delegate(.selectContent(
                 pagingItem: Item(index: 2),
                 direction: .forward(sibling: true),
@@ -577,8 +562,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testSelectNotSibling() {
+    @Test func selectNotSibling() {
         // Make sure there is no item before index 0.
         dataSource.minIndexBefore = 0
 
@@ -594,9 +578,9 @@ final class PagingControllerTests: XCTestCase {
         pagingController.select(pagingItem: Item(index: 4), animated: true)
 
         // Expect it to select the content view.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(actions(delegate.calls), [
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(actions(delegate.calls) == [
             .delegate(.selectContent(
                 pagingItem: Item(index: 4),
                 direction: .forward(sibling: false),
@@ -605,8 +589,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testSelectItemOutsideVisibleItems() {
+    @Test func selectItemOutsideVisibleItems() {
         // Select the first item, and scroll to the edge of the
         // collection view a few times to make sure the selected
         // item is no longer in view.
@@ -631,7 +614,7 @@ final class PagingControllerTests: XCTestCase {
         // The visible items should now contain the items that were
         // visible before scrolling (6..10), plus the items around
         // the selected item (0...4).
-        XCTAssertEqual(pagingController.visibleItems.items as? [Item], [
+        #expect(pagingController.visibleItems.items as? [Item] == [
             Item(index: 0),
             Item(index: 1),
             Item(index: 2),
@@ -653,7 +636,7 @@ final class PagingControllerTests: XCTestCase {
             delegate.calls
         )
 
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.reloadData),
             .collectionViewLayout(.prepare),
             .collectionView(.contentOffset(CGPoint(x: 400, y: 0))),
@@ -668,8 +651,7 @@ final class PagingControllerTests: XCTestCase {
 
     // MARK: - Content finished scrolling
 
-    @MainActor
-    func testContentFinishedScrollingWithUpcomingItem() {
+    @Test func contentFinishedScrollingWithUpcomingItem() {
         // Select an item and enter the scrolling state.
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
@@ -684,7 +666,7 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentFinishedScrolling()
 
         // Expect it to enter the selected state with the upcoming item.
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 1)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 1)))
 
         // Combine the method calls for the collection view,
         // collection view layout and delegate to ensure that
@@ -697,7 +679,7 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it to reload data, update the layout and select the item
         // in the collectio view.
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.reloadData),
             .collectionViewLayout(.prepare),
             .collectionView(.contentOffset(CGPoint(x: 0, y: 0))),
@@ -711,8 +693,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testContentFinishedScrollingCollectionViewBeingDragged() {
+    @Test func contentFinishedScrollingCollectionViewBeingDragged() {
         // Select an item and enter the scrolling state.
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
@@ -728,13 +709,12 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentFinishedScrolling()
 
         // Expect it to not update the collection view.
-        XCTAssertEqual(collectionView.calls, [])
-        XCTAssertEqual(collectionViewLayout.calls, [])
-        XCTAssertEqual(delegate.calls, [])
+        #expect(collectionView.calls == [])
+        #expect(collectionViewLayout.calls == [])
+        #expect(delegate.calls == [])
     }
 
-    @MainActor
-    func testContentFinishedScrollingWihtoutUpcomingItem() {
+    @Test func contentFinishedScrollingWihtoutUpcomingItem() {
         // Select an item and enter the scrolling state.
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
@@ -749,13 +729,12 @@ final class PagingControllerTests: XCTestCase {
         pagingController.contentFinishedScrolling()
 
         // Expect it to set the selected item to equal the current paging item.
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 0)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 0)))
     }
 
     // MARK: - Transition size
 
-    @MainActor
-    func testTransitionSize() {
+    @Test func transitionSize() {
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
@@ -778,7 +757,7 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it to reload data, update the layout and selects the
         // current item.
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionView(.reloadData),
             .collectionViewLayout(.prepare),
             .collectionView(.contentOffset(.zero)),
@@ -792,8 +771,7 @@ final class PagingControllerTests: XCTestCase {
         ])
     }
 
-    @MainActor
-    func testTransitionSizeWhenSelected() {
+    @Test func transitionSizeWhenSelected() {
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
@@ -806,11 +784,10 @@ final class PagingControllerTests: XCTestCase {
         pagingController.transitionSize()
 
         // Expect it to not update the state.
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 0)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 0)))
     }
 
-    @MainActor
-    func testTransitionSizeWhenScrolling() {
+    @Test func transitionSizeWhenScrolling() {
         dataSource.minIndexBefore = 0
         pagingController.select(pagingItem: Item(index: 0), animated: false)
 
@@ -826,22 +803,21 @@ final class PagingControllerTests: XCTestCase {
         pagingController.transitionSize()
 
         // Expect it to select the current item.
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 0)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 0)))
     }
 
     // MARK: - Reload data
 
-    @MainActor
-    func testReloadData() {
+    @Test func reloadData() {
         pagingController.reloadData(around: Item(index: 2))
 
         // Expect it to select the given item
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 2)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 2)))
 
         // Expect it to generate items around the given item
-        XCTAssertTrue(pagingController.visibleItems.hasItemsBefore)
-        XCTAssertTrue(pagingController.visibleItems.hasItemsAfter)
-        XCTAssertEqual(pagingController.visibleItems.items as? [Item], [
+        #expect(pagingController.visibleItems.hasItemsBefore)
+        #expect(pagingController.visibleItems.hasItemsAfter)
+        #expect(pagingController.visibleItems.items as? [Item] == [
             Item(index: 0),
             Item(index: 1),
             Item(index: 2),
@@ -860,7 +836,7 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it to reload data in the collection view and update the
         // content view with the new view controllers.
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionViewLayout(.invalidateLayout),
             .collectionView(.reloadData),
             .delegate(.removeContent),
@@ -875,17 +851,16 @@ final class PagingControllerTests: XCTestCase {
 
     // MARK: - Reload menu
 
-    @MainActor
-    func testReloadMenu() {
+    @Test func reloadMenu() {
         pagingController.reloadMenu(around: Item(index: 2))
 
         // Expect it to select the given item
-        XCTAssertEqual(pagingController.state, .selected(pagingItem: Item(index: 2)))
+        #expect(pagingController.state == .selected(pagingItem: Item(index: 2)))
 
         // Expect it to generate items around the given item
-        XCTAssertTrue(pagingController.visibleItems.hasItemsBefore)
-        XCTAssertTrue(pagingController.visibleItems.hasItemsAfter)
-        XCTAssertEqual(pagingController.visibleItems.items as? [Item], [
+        #expect(pagingController.visibleItems.hasItemsBefore)
+        #expect(pagingController.visibleItems.hasItemsAfter)
+        #expect(pagingController.visibleItems.items as? [Item] == [
             Item(index: 0),
             Item(index: 1),
             Item(index: 2),
@@ -904,7 +879,7 @@ final class PagingControllerTests: XCTestCase {
 
         // Expect it to reload data in the collection view, but leave the
         // content view unchanged.
-        XCTAssertEqual(actions, [
+        #expect(actions == [
             .collectionViewLayout(.invalidateLayout),
             .collectionView(.reloadData),
         ])

@@ -1,11 +1,11 @@
+import Testing
 @testable import Parchment
-import XCTest
 
 @MainActor
-final class PagingDistanceLeftTests: XCTestCase {
-    private var sizeCache: PagingSizeCache!
+struct PagingDistanceLeftTests {
+    private let sizeCache: PagingSizeCache
 
-    override func setUp() {
+    init() {
         sizeCache = PagingSizeCache(options: PagingOptions())
     }
 
@@ -19,7 +19,7 @@ final class PagingDistanceLeftTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceLeft() {
+    @Test func distanceLeft() {
         let distance = createDistance(
             currentItem: Item(index: 0),
             currentItemBounds: CGRect(x: 0, y: 0, width: 100, height: 100),
@@ -31,7 +31,7 @@ final class PagingDistanceLeftTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 100)
+        #expect(value == 100)
     }
 
     /// Distance from left aligned item to upcoming item with other
@@ -45,7 +45,7 @@ final class PagingDistanceLeftTests: XCTestCase {
     /// └────────────────────────────────────┘
     /// x: 0
     /// ```
-    func testDistanceLeftWithItemsBetween() {
+    @Test func distanceLeftWithItemsBetween() {
         let distance = createDistance(
             currentItem: Item(index: 0),
             currentItemBounds: CGRect(x: 0, y: 0, width: 100, height: 100),
@@ -57,7 +57,7 @@ final class PagingDistanceLeftTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 200)
+        #expect(value == 200)
     }
 
     /// Distance to upcoming item when scrolled slightly.
@@ -70,7 +70,7 @@ final class PagingDistanceLeftTests: XCTestCase {
     ///      └────────────────────────────────────┘
     ///      x: 50
     /// ```
-    func testDistanceLeftWithContentOffset() {
+    @Test func distanceLeftWithContentOffset() {
         let distance = createDistance(
             bounds: CGRect(origin: CGPoint(x: 50, y: 0), size: .zero),
             currentItem: Item(index: 0),
@@ -83,7 +83,7 @@ final class PagingDistanceLeftTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 50)
+        #expect(value == 50)
     }
 
     /// Distance from larger, left-aligned item positioned before
@@ -97,7 +97,7 @@ final class PagingDistanceLeftTests: XCTestCase {
     ///             └───────────────────────────────────────┘
     ///             x: 500
     /// ```
-    func testDistanceLeftUsingSizeDelegateScrollingForward() {
+    @Test func distanceLeftUsingSizeDelegateScrollingForward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, isSelected in
             if isSelected {
@@ -120,7 +120,7 @@ final class PagingDistanceLeftTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, 50)
+        #expect(value == 50)
     }
 
     /// Distance from larger, left-aligned item positioned after
@@ -134,7 +134,7 @@ final class PagingDistanceLeftTests: XCTestCase {
     ///             └───────────────────────────────────────┘
     ///             x: 500
     /// ```
-    func testDistanceLeftUsingSizeDelegateScrollingBackward() {
+    @Test func distanceLeftUsingSizeDelegateScrollingBackward() {
         sizeCache.implementsSizeDelegate = true
         sizeCache.sizeForPagingItem = { _, _ in
             // Expects it to ignore this value when scrolling backwards so
@@ -155,6 +155,6 @@ final class PagingDistanceLeftTests: XCTestCase {
         )
 
         let value = distance.calculate()
-        XCTAssertEqual(value, -50)
+        #expect(value == -50)
     }
 }

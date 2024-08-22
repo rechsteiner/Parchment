@@ -1,14 +1,14 @@
 import Foundation
+import Testing
 @testable import Parchment
-import XCTest
 
 @MainActor
-final class PageViewManagerTests: XCTestCase {
-    var dataSource: MockPageViewManagerDataSource!
-    var delegate: MockPageViewManagerDelegate!
-    var manager: PageViewManager!
+final class PageViewManagerTests {
+    private var dataSource: MockPageViewManagerDataSource
+    private var delegate: MockPageViewManagerDelegate
+    private var manager: PageViewManager
 
-    override func setUp() {
+    init() {
         dataSource = MockPageViewManagerDataSource()
         delegate = MockPageViewManagerDelegate()
         manager = PageViewManager()
@@ -18,7 +18,7 @@ final class PageViewManagerTests: XCTestCase {
 
     // MARK: - Selection
 
-    func testSelectWhenEmpty() {
+    @Test func selectWhenEmpty() {
         let previousVc = UIViewController()
         let selectedVc = UIViewController()
         let nextVc = UIViewController()
@@ -29,7 +29,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.viewDidAppear(false)
         manager.select(viewController: selectedVc, animated: true)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, selectedVc, true),
             .addViewController(previousVc),
             .addViewController(selectedVc),
@@ -39,7 +39,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectAllNewViewControllersForwardAnimated() {
+    @Test func selectAllNewViewControllersForwardAnimated() {
         let oldPreviousVc = UIViewController()
         let oldSelectedVc = UIViewController()
         let oldNextVc = UIViewController()
@@ -61,7 +61,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.didScroll(progress: 0.1)
         manager.didScroll(progress: 1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             // Add the new upcoming view controller
             .removeViewController(oldNextVc),
             .addViewController(newSelectedVc),
@@ -91,7 +91,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelSelectAllNewViewControllersForwardAnimated() {
+    @Test func cancelSelectAllNewViewControllersForwardAnimated() {
         let oldPreviousVc = UIViewController()
         let oldSelectedVc = UIViewController()
         let oldNextVc = UIViewController()
@@ -115,7 +115,7 @@ final class PageViewManagerTests: XCTestCase {
         dataSource.viewControllerAfter = { _ in oldNextVc }
         manager.didScroll(progress: 0.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: oldSelectedVc, to: newSelectedVc, progress: 0.0),
             .beginAppearanceTransition(true, oldSelectedVc, true),
             .beginAppearanceTransition(false, newSelectedVc, true),
@@ -132,7 +132,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectAllNewViewControllersReverseAnimated() {
+    @Test func selectAllNewViewControllersReverseAnimated() {
         let oldPreviousVc = UIViewController()
         let oldSelectedVc = UIViewController()
         let oldNextVc = UIViewController()
@@ -154,7 +154,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.didScroll(progress: -0.1)
         manager.didScroll(progress: -1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             // Add the new upcoming view controller
             .removeViewController(oldPreviousVc),
             .addViewController(newSelectedVc),
@@ -184,7 +184,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelSelectAllNewViewControllersReverseAnimated() {
+    @Test func cancelSelectAllNewViewControllersReverseAnimated() {
         let oldPreviousVc = UIViewController()
         let oldSelectedVc = UIViewController()
         let oldNextVc = UIViewController()
@@ -208,7 +208,7 @@ final class PageViewManagerTests: XCTestCase {
         dataSource.viewControllerBefore = { _ in oldPreviousVc }
         manager.didScroll(progress: 0.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: oldSelectedVc, to: newSelectedVc, progress: 0.0),
             .beginAppearanceTransition(true, oldSelectedVc, true),
             .beginAppearanceTransition(false, newSelectedVc, true),
@@ -225,7 +225,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectAllNewViewControllersWithoutAnimation() {
+    @Test func selectAllNewViewControllersWithoutAnimation() {
         let oldPreviousVc = UIViewController()
         let oldSelectedVc = UIViewController()
         let oldNextVc = UIViewController()
@@ -245,7 +245,7 @@ final class PageViewManagerTests: XCTestCase {
         dataSource.viewControllerAfter = { _ in newNextVc }
         manager.select(viewController: newSelectedVc, animated: false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             // Start the appearance transitions.
             .beginAppearanceTransition(false, oldSelectedVc, false),
             .beginAppearanceTransition(true, newSelectedVc, false),
@@ -265,7 +265,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectShiftOneForwardWithoutAnimation() {
+    @Test func selectShiftOneForwardWithoutAnimation() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -282,7 +282,7 @@ final class PageViewManagerTests: XCTestCase {
         dataSource.viewControllerAfter = { _ in viewController3 }
         manager.select(viewController: viewController2, animated: false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             // Start the appearance transitions.
             .beginAppearanceTransition(false, viewController1, false),
             .beginAppearanceTransition(true, viewController2, false),
@@ -298,7 +298,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectShiftOneReverseWithoutAnimation() {
+    @Test func selectShiftOneReverseWithoutAnimation() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -315,7 +315,7 @@ final class PageViewManagerTests: XCTestCase {
         dataSource.viewControllerAfter = { _ in viewController2 }
         manager.select(viewController: viewController1, animated: false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             // Start the appearance transitions.
             .beginAppearanceTransition(false, viewController2, false),
             .beginAppearanceTransition(true, viewController1, false),
@@ -331,7 +331,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectNextAnimated() {
+    @Test func selectNextAnimated() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -345,7 +345,7 @@ final class PageViewManagerTests: XCTestCase {
 
         dataSource.viewControllerAfter = { _ in nil }
         dataSource.viewControllerBefore = { _ in
-            XCTFail()
+            Issue.record("Expected this to not be called")
             return nil
         }
 
@@ -354,7 +354,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Assert that the willScroll event is triggered which means the
         // initialDirection state was reset.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .scrollForward,
             .isScrolling(from: viewController1, to: viewController2, progress: 0.1),
             .willScroll(from: viewController1, to: viewController2),
@@ -363,7 +363,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectNextWithoutAnimation() {
+    @Test func selectNextWithoutAnimation() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -378,7 +378,7 @@ final class PageViewManagerTests: XCTestCase {
 
         dataSource.viewControllerAfter = { _ in viewController3 }
         dataSource.viewControllerBefore = { _ in
-            XCTFail()
+            Issue.record("Expected this to not be called")
             return nil
         }
 
@@ -386,7 +386,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that it moves the view controllers immediately instead
         // of triggered the .scrollForward event.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, viewController1, false),
             .beginAppearanceTransition(true, viewController2, false),
             .removeViewController(viewController0),
@@ -397,7 +397,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectPreviousAnimated() {
+    @Test func selectPreviousAnimated() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -411,7 +411,7 @@ final class PageViewManagerTests: XCTestCase {
 
         dataSource.viewControllerBefore = { _ in nil }
         dataSource.viewControllerAfter = { _ in
-            XCTFail()
+            Issue.record("Expected this to not be called")
             return nil
         }
 
@@ -420,7 +420,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that the willScroll event is triggered which means the
         // initialDirection state was reset.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .scrollReverse,
             .isScrolling(from: viewController1, to: viewController0, progress: -0.1),
             .willScroll(from: viewController1, to: viewController0),
@@ -429,7 +429,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectPreviousWithoutAnimation() {
+    @Test func selectPreviousWithoutAnimation() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -444,7 +444,7 @@ final class PageViewManagerTests: XCTestCase {
 
         dataSource.viewControllerBefore = { _ in viewController0 }
         dataSource.viewControllerAfter = { _ in
-            XCTFail()
+            Issue.record("Expected this to not be called")
             return nil
         }
 
@@ -452,7 +452,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that it moves the view controllers immediately instead
         // of triggered the .scrollForward event.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, viewController2, false),
             .beginAppearanceTransition(true, viewController1, false),
             .removeViewController(viewController3),
@@ -465,7 +465,7 @@ final class PageViewManagerTests: XCTestCase {
 
     // MARK: - Scrolling
 
-    func testStartedScrollingForward() {
+    @Test func startedScrollingForward() {
         let selectedVc = UIViewController()
         let nextVc = UIViewController()
 
@@ -477,7 +477,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willBeginDragging()
         manager.didScroll(progress: 0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: nextVc, progress: 0.1),
             .willScroll(from: selectedVc, to: nextVc),
             .beginAppearanceTransition(true, nextVc, true),
@@ -485,7 +485,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testStartedScrollingForwardNextNil() {
+    @Test func startedScrollingForwardNextNil() {
         let selectedVc = UIViewController()
 
         manager.viewDidAppear(false)
@@ -495,12 +495,12 @@ final class PageViewManagerTests: XCTestCase {
         manager.willBeginDragging()
         manager.didScroll(progress: 0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: nil, progress: 0.1),
         ])
     }
 
-    func testStartedScrollingReverse() {
+    @Test func startedScrollingReverse() {
         let selectedVc = UIViewController()
         let previousVc = UIViewController()
 
@@ -512,7 +512,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willBeginDragging()
         manager.didScroll(progress: -0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: previousVc, progress: -0.1),
             .willScroll(from: selectedVc, to: previousVc),
             .beginAppearanceTransition(true, previousVc, true),
@@ -520,7 +520,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testStartedScrollingReversePreviousNil() {
+    @Test func startedScrollingReversePreviousNil() {
         let selectedVc = UIViewController()
 
         manager.viewDidAppear(false)
@@ -530,12 +530,12 @@ final class PageViewManagerTests: XCTestCase {
         manager.willBeginDragging()
         manager.didScroll(progress: -0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: nil, progress: -0.1),
         ])
     }
 
-    func testIsScrollingForward() {
+    @Test func isScrollingForward() {
         let selectedVc = UIViewController()
         let nextVc = UIViewController()
 
@@ -549,13 +549,13 @@ final class PageViewManagerTests: XCTestCase {
         manager.didScroll(progress: 0.2)
         manager.didScroll(progress: 0.3)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: nextVc, progress: 0.2),
             .isScrolling(from: selectedVc, to: nextVc, progress: 0.3),
         ])
     }
 
-    func testIsScrollingReverse() {
+    @Test func isScrollingReverse() {
         let previousVc = UIViewController()
         let selectedVc = UIViewController()
 
@@ -569,13 +569,13 @@ final class PageViewManagerTests: XCTestCase {
         manager.didScroll(progress: -0.2)
         manager.didScroll(progress: -0.3)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: selectedVc, to: previousVc, progress: -0.2),
             .isScrolling(from: selectedVc, to: previousVc, progress: -0.3),
         ])
     }
 
-    func testFinishedScrollingForward() {
+    @Test func finishedScrollingForward() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -592,7 +592,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: 1.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController1, to: viewController2, progress: 1.0),
             .didFinishScrolling(from: viewController1, to: viewController2, success: true),
             .removeViewController(viewController0),
@@ -603,7 +603,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testFinishedScrollingForwardNextNil() {
+    @Test func finishedScrollingForwardNextNil() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -620,7 +620,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: 1.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController1, to: viewController2, progress: 1.0),
             .didFinishScrolling(from: viewController1, to: viewController2, success: true),
             .removeViewController(viewController0),
@@ -630,7 +630,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testFinishedScrollingReverse() {
+    @Test func finishedScrollingReverse() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -648,7 +648,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: -1.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController1, progress: -1.0),
             .didFinishScrolling(from: viewController2, to: viewController1, success: true),
             .removeViewController(viewController3),
@@ -659,7 +659,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testFinishedScrollingReversePreviousNil() {
+    @Test func finishedScrollingReversePreviousNil() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -676,7 +676,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: -1.0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController1, progress: -1.0),
             .didFinishScrolling(from: viewController2, to: viewController1, success: true),
             .removeViewController(viewController3),
@@ -686,7 +686,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testDidScrollAfterDraggingEnded() {
+    @Test func didScrollAfterDraggingEnded() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -710,13 +710,13 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that it continues to trigger .isScrolling events for the
         // correct view controllers.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController1, to: viewController2, progress: 0.2),
             .isScrolling(from: viewController1, to: viewController2, progress: 0.3),
         ])
     }
 
-    func testFinishedScrollingOvershooting() {
+    @Test func finishedScrollingOvershooting() {
         let viewController0 = UIViewController()
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
@@ -740,14 +740,14 @@ final class PageViewManagerTests: XCTestCase {
         // Expect that it triggers .isScrolling events for scroll events
         // when overshooting, but does not trigger appearance transitions
         // for the next upcoming view (viewController3).
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController3, progress: 0.0),
             .isScrolling(from: viewController2, to: viewController3, progress: 0.01),
             .isScrolling(from: viewController2, to: viewController3, progress: -0.01),
         ])
     }
 
-    func testCancelScrollForward() {
+    @Test func cancelScrollForward() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -762,7 +762,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: 0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController3, progress: 0.0),
             .beginAppearanceTransition(true, viewController2, true),
             .beginAppearanceTransition(false, viewController3, true),
@@ -772,7 +772,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelScrollReverse() {
+    @Test func cancelScrollReverse() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -787,7 +787,7 @@ final class PageViewManagerTests: XCTestCase {
         delegate.calls = []
         manager.didScroll(progress: 0)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController1, progress: 0.0),
             .beginAppearanceTransition(true, viewController2, true),
             .beginAppearanceTransition(false, viewController1, true),
@@ -797,7 +797,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelScrollForwardThenSwipeForwardAgain() {
+    @Test func cancelScrollForwardThenSwipeForwardAgain() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -816,7 +816,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willEndDragging()
         manager.didScroll(progress: 0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController3, progress: 0.1),
             .willScroll(from: viewController2, to: viewController3),
             .beginAppearanceTransition(true, viewController3, true),
@@ -824,7 +824,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelScrollReverseThenSwipeReverseAgain() {
+    @Test func cancelScrollReverseThenSwipeReverseAgain() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -843,7 +843,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willEndDragging()
         manager.didScroll(progress: -0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController2, to: viewController1, progress: -0.1),
             .willScroll(from: viewController2, to: viewController1),
             .beginAppearanceTransition(true, viewController1, true),
@@ -851,7 +851,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelScrollForwardThenSwipeReverse() {
+    @Test func cancelScrollForwardThenSwipeReverse() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -869,7 +869,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willEndDragging()
         manager.didScroll(progress: -0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, viewController2, true),
             .beginAppearanceTransition(false, viewController3, true),
             .endAppearanceTransition(viewController2),
@@ -882,7 +882,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testCancelScrollReverseThenSwipeForward() {
+    @Test func cancelScrollReverseThenSwipeForward() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -900,7 +900,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willEndDragging()
         manager.didScroll(progress: 0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, viewController2, true),
             .beginAppearanceTransition(false, viewController1, true),
             .endAppearanceTransition(viewController2),
@@ -913,7 +913,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testStartedScrollingBeforeCurrentSwipeReloaded() {
+    @Test func startedScrollingBeforeCurrentSwipeReloaded() {
         let viewController1 = UIViewController()
         let viewController2 = UIViewController()
         let viewController3 = UIViewController()
@@ -934,7 +934,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.willEndDragging()
         manager.didScroll(progress: 0.1)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .isScrolling(from: viewController3, to: viewController4, progress: 0.1),
             .willScroll(from: viewController3, to: viewController4),
             .beginAppearanceTransition(true, viewController4, true),
@@ -944,7 +944,7 @@ final class PageViewManagerTests: XCTestCase {
 
     // MARK: - Removing
 
-    func testRemoveAll() {
+    @Test func removeAll() {
         let previousVc = UIViewController()
         let selectedVc = UIViewController()
         let nextVc = UIViewController()
@@ -960,7 +960,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expects that it removes all view controller and starts
         // appearance transitions without animations.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, selectedVc, false),
             .removeViewController(selectedVc),
             .removeViewController(previousVc),
@@ -972,73 +972,73 @@ final class PageViewManagerTests: XCTestCase {
 
     // MARK: - View Appearance
 
-    func testViewAppeared() {
+    @Test func viewAppeared() {
         let viewController = UIViewController()
         manager.select(viewController: viewController)
         delegate.calls = []
         manager.viewWillAppear(false)
         manager.viewDidAppear(false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, viewController, false),
             .layoutViews([viewController]),
             .endAppearanceTransition(viewController),
         ])
     }
 
-    func testViewAppearedAnimated() {
+    @Test func viewAppearedAnimated() {
         let viewController = UIViewController()
         manager.select(viewController: viewController)
         delegate.calls = []
         manager.viewWillAppear(true)
         manager.viewDidAppear(true)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, viewController, true),
             .layoutViews([viewController]),
             .endAppearanceTransition(viewController),
         ])
     }
 
-    func testViewDisappeared() {
+    @Test func viewDisappeared() {
         let viewController = UIViewController()
         manager.select(viewController: viewController)
         delegate.calls = []
         manager.viewWillDisappear(false)
         manager.viewDidDisappear(false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, viewController, false),
             .endAppearanceTransition(viewController),
         ])
     }
 
-    func testViewDidDisappearAnimated() {
+    @Test func viewDidDisappearAnimated() {
         let viewController = UIViewController()
         manager.select(viewController: viewController)
         delegate.calls = []
         manager.viewWillDisappear(true)
         manager.viewDidDisappear(true)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, viewController, true),
             .endAppearanceTransition(viewController),
         ])
     }
 
-    func testSelectBeforeViewAppeared() {
+    @Test func selectBeforeViewAppeared() {
         let viewController = UIViewController()
         manager.select(viewController: viewController)
 
         // Expect that the appearance transitions methods are not called
         // for the selected view controller.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .addViewController(viewController),
             .layoutViews([viewController]),
         ])
     }
 
-    func testSelectWhenAppearing() {
+    @Test func selectWhenAppearing() {
         let viewController = UIViewController()
         manager.viewWillAppear(true)
         manager.select(viewController: viewController, animated: false)
@@ -1046,7 +1046,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that it begins appearance transitions with the same
         // animated flag as viewWillAppear.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(true, viewController, true),
             .addViewController(viewController),
             .layoutViews([viewController]),
@@ -1054,7 +1054,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectWhenDisappearing() {
+    @Test func selectWhenDisappearing() {
         let viewController = UIViewController()
         manager.viewWillAppear(true)
         manager.viewDidAppear(true)
@@ -1064,7 +1064,7 @@ final class PageViewManagerTests: XCTestCase {
 
         // Expect that it begins appearance transitions with the same
         // animated flag as viewWillDisappear.
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .beginAppearanceTransition(false, viewController, true),
             .addViewController(viewController),
             .layoutViews([viewController]),
@@ -1072,7 +1072,7 @@ final class PageViewManagerTests: XCTestCase {
         ])
     }
 
-    func testSelectWhenDisappeared() {
+    @Test func selectWhenDisappeared() {
         let viewController = UIViewController()
         manager.viewWillAppear(true)
         manager.viewDidAppear(true)
@@ -1080,7 +1080,7 @@ final class PageViewManagerTests: XCTestCase {
         manager.viewDidDisappear(true)
         manager.select(viewController: viewController, animated: false)
 
-        XCTAssertEqual(delegate.calls, [
+        #expect(delegate.calls == [
             .addViewController(viewController),
             .layoutViews([viewController]),
         ])

@@ -1,7 +1,7 @@
 import UIKit
 
 open class PagingIndicatorLayoutAttributes: UICollectionViewLayoutAttributes {
-    open var backgroundColor: UIColor?
+    nonisolated(unsafe) open var backgroundColor: UIColor?
 
     open override func copy(with zone: NSZone? = nil) -> Any {
         let copy = super.copy(with: zone) as! PagingIndicatorLayoutAttributes

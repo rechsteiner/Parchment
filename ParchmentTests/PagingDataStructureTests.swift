@@ -1,11 +1,11 @@
 import Foundation
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingDataTests: XCTestCase {
-    var visibleItems: PagingItems!
+struct PagingDataTests {
+    private let visibleItems: PagingItems
 
-    override func setUp() {
+    init() {
         visibleItems = PagingItems(items: [
             Item(index: 0),
             Item(index: 1),
@@ -13,33 +13,33 @@ final class PagingDataTests: XCTestCase {
         ])
     }
 
-    func testIndexPathForPagingItemFound() {
+    @Test func indexPathForPagingItemFound() {
         let indexPath = visibleItems.indexPath(for: Item(index: 0))!
-        XCTAssertEqual(indexPath.item, 0)
+        #expect(indexPath.item == 0)
     }
 
-    func testIndexPathForPagingItemMissing() {
+    @Test func indexPathForPagingItemMissing() {
         let indexPath = visibleItems.indexPath(for: Item(index: -1))
-        XCTAssertNil(indexPath)
+        #expect(indexPath == nil)
     }
 
-    func testPagingItemForIndexPath() {
+    @Test func pagingItemForIndexPath() {
         let indexPath = IndexPath(item: 0, section: 0)
         let pagingItem = visibleItems.pagingItem(for: indexPath) as! Item
-        XCTAssertEqual(pagingItem, Item(index: 0))
+        #expect(pagingItem == Item(index: 0))
     }
 
-    func testDirectionForIndexPathForward() {
+    @Test func directionForIndexPathForward() {
         let currentPagingItem = Item(index: 0)
         let upcomingPagingItem = Item(index: 1)
         let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
-        XCTAssertEqual(direction, PagingDirection.forward(sibling: true))
+        #expect(direction == PagingDirection.forward(sibling: true))
     }
 
-    func testDirectionForIndexPathReverse() {
+    @Test func directionForIndexPathReverse() {
         let currentPagingItem = Item(index: 1)
         let upcomingPagingItem = Item(index: 0)
         let direction = visibleItems.direction(from: currentPagingItem, to: upcomingPagingItem)
-        XCTAssertEqual(direction, PagingDirection.reverse(sibling: true))
+        #expect(direction == PagingDirection.reverse(sibling: true))
     }
 }

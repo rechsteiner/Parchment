@@ -1,6 +1,7 @@
 import Parchment
 import UIKit
 
+@MainActor
 protocol ImagesViewControllerDelegate: AnyObject {
     func imagesViewControllerDidScroll(_: ImagesViewController)
 }

@@ -1,53 +1,53 @@
 import Foundation
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingDiffTests: XCTestCase {
-    func testDetectsAddedItemsBeforeCenter() {
+struct PagingDiffTests {
+    @Test func detectsAddedItemsBeforeCenter() {
         let from = PagingItems(items: [Item(index: 1)])
         let to = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let diff = PagingDiff(from: from, to: to)
         let added = diff.added()
         let removed = diff.removed()
 
-        XCTAssertEqual(added.count, 1)
-        XCTAssertEqual(added[0], IndexPath(item: 0, section: 0))
-        XCTAssertEqual(removed, [])
+        #expect(added.count == 1)
+        #expect(added[0] == IndexPath(item: 0, section: 0))
+        #expect(removed == [])
     }
 
-    func testIgnoresAddedItemsAfterCenter() {
+    @Test func ignoresAddedItemsAfterCenter() {
         let from = PagingItems(items: [Item(index: 0)])
         let to = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let diff = PagingDiff(from: from, to: to)
 
-        XCTAssertEqual(diff.added(), [])
-        XCTAssertEqual(diff.removed(), [])
+        #expect(diff.added() == [])
+        #expect(diff.removed() == [])
     }
 
-    func testIgnoresRemovedItemsAfterCenter() {
+    @Test func ignoresRemovedItemsAfterCenter() {
         let from = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let to = PagingItems(items: [Item(index: 0)])
         let diff = PagingDiff(from: from, to: to)
 
-        XCTAssertEqual(diff.removed(), [])
-        XCTAssertEqual(diff.added(), [])
+        #expect(diff.removed() == [])
+        #expect(diff.added() == [])
     }
 
-    func testDetectsRemovedItemsBeforeCenter() {
+    @Test func detectsRemovedItemsBeforeCenter() {
         let from = PagingItems(items: [Item(index: 0), Item(index: 1)])
         let to = PagingItems(items: [Item(index: 1)])
         let diff = PagingDiff(from: from, to: to)
         let removed = diff.removed()
         let added = diff.added()
 
-        XCTAssertEqual(added, [])
-        XCTAssertEqual(removed.count, 1)
-        XCTAssertEqual(removed[0], IndexPath(item: 0, section: 0))
+        #expect(added == [])
+        #expect(removed.count == 1)
+        #expect(removed[0] == IndexPath(item: 0, section: 0))
     }
 
     // TODO: Reduce these tests to a minimal test case and update
     // the descriptions.
-    func testScenario1() {
+    @Test func scenario1() {
         let from = PagingItems(items: [
             Item(index: 16),
             Item(index: 17),
@@ -88,18 +88,18 @@ final class PagingDiffTests: XCTestCase {
         let added = diff.added()
         let removed = diff.removed()
 
-        XCTAssertEqual(removed, [])
-        XCTAssertEqual(added.count, 7)
-        XCTAssertEqual(added[0], IndexPath(item: 0, section: 0))
-        XCTAssertEqual(added[1], IndexPath(item: 1, section: 0))
-        XCTAssertEqual(added[2], IndexPath(item: 2, section: 0))
-        XCTAssertEqual(added[3], IndexPath(item: 3, section: 0))
-        XCTAssertEqual(added[4], IndexPath(item: 4, section: 0))
-        XCTAssertEqual(added[5], IndexPath(item: 5, section: 0))
-        XCTAssertEqual(added[6], IndexPath(item: 6, section: 0))
+        #expect(removed == [])
+        #expect(added.count == 7)
+        #expect(added[0] == IndexPath(item: 0, section: 0))
+        #expect(added[1] == IndexPath(item: 1, section: 0))
+        #expect(added[2] == IndexPath(item: 2, section: 0))
+        #expect(added[3] == IndexPath(item: 3, section: 0))
+        #expect(added[4] == IndexPath(item: 4, section: 0))
+        #expect(added[5] == IndexPath(item: 5, section: 0))
+        #expect(added[6] == IndexPath(item: 6, section: 0))
     }
 
-    func testScenario2() {
+    @Test func scenario2() {
         let from = PagingItems(items: [
             Item(index: 0),
             Item(index: 1),
@@ -127,14 +127,14 @@ final class PagingDiffTests: XCTestCase {
         let diff = PagingDiff(from: from, to: to)
         let removed = diff.removed()
 
-        XCTAssertEqual(removed.count, 4)
-        XCTAssertEqual(removed[0], IndexPath(item: 0, section: 0))
-        XCTAssertEqual(removed[1], IndexPath(item: 1, section: 0))
-        XCTAssertEqual(removed[2], IndexPath(item: 2, section: 0))
-        XCTAssertEqual(removed[3], IndexPath(item: 3, section: 0))
+        #expect(removed.count == 4)
+        #expect(removed[0] == IndexPath(item: 0, section: 0))
+        #expect(removed[1] == IndexPath(item: 1, section: 0))
+        #expect(removed[2] == IndexPath(item: 2, section: 0))
+        #expect(removed[3] == IndexPath(item: 3, section: 0))
     }
 
-    func testScenario3() {
+    @Test func scenario3() {
         let from = PagingItems(items: [
             Item(index: 1),
             Item(index: 2),
@@ -151,8 +151,8 @@ final class PagingDiffTests: XCTestCase {
         let added = diff.added()
         let removed = diff.removed()
 
-        XCTAssertEqual(added, [])
-        XCTAssertEqual(removed.count, 1)
-        XCTAssertEqual(removed[0], IndexPath(item: 0, section: 0))
+        #expect(added == [])
+        #expect(removed.count == 1)
+        #expect(removed[0] == IndexPath(item: 0, section: 0))
     }
 }

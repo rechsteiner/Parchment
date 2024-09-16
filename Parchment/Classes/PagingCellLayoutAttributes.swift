@@ -3,7 +3,7 @@ import UIKit
 /// A custom `UICollectionViewLayoutAttributes` subclass that adds a
 /// `progress` property indicating how far the user has scrolled.
 open class PagingCellLayoutAttributes: UICollectionViewLayoutAttributes {
-    open var progress: CGFloat = 0.0
+    nonisolated(unsafe) open var progress: CGFloat = 0.0
 
     open override func copy(with zone: NSZone? = nil) -> Any {
         let copy = super.copy(with: zone) as! PagingCellLayoutAttributes

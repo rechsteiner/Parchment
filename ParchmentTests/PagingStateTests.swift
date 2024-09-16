@@ -1,18 +1,18 @@
 import Foundation
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingStateTests: XCTestCase {
-    func testSelected() {
+struct PagingStateTests {
+    @Test func selected() {
         let state: PagingState = .selected(pagingItem: Item(index: 0))
 
-        XCTAssertEqual(state.currentPagingItem as? Item?, Item(index: 0))
-        XCTAssertNil(state.upcomingPagingItem)
-        XCTAssertEqual(state.progress, 0)
-        XCTAssertEqual(state.visuallySelectedPagingItem as? Item?, Item(index: 0))
+        #expect(state.currentPagingItem as? Item? == Item(index: 0))
+        #expect(state.upcomingPagingItem == nil)
+        #expect(state.progress == 0)
+        #expect(state.visuallySelectedPagingItem as? Item? == Item(index: 0))
     }
 
-    func testScrollingCurrentPagingItem() {
+    @Test func scrollingCurrentPagingItem() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
@@ -21,10 +21,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.currentPagingItem as? Item?, Item(index: 0))
+        #expect(state.currentPagingItem as? Item? == Item(index: 0))
     }
 
-    func testProgress() {
+    @Test func progress() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
@@ -33,10 +33,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.progress, 0.5)
+        #expect(state.progress == 0.5)
     }
 
-    func testUpcomingPagingItem() {
+    @Test func upcomingPagingItem() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
@@ -45,10 +45,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.upcomingPagingItem as? Item?, Item(index: 1))
+        #expect(state.upcomingPagingItem as? Item? == Item(index: 1))
     }
 
-    func testUpcomingPagingItemNil() {
+    @Test func upcomingPagingItemNil() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: nil,
@@ -57,10 +57,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertNil(state.upcomingPagingItem)
+        #expect(state.upcomingPagingItem == nil)
     }
 
-    func testVisuallySelectedPagingItemProgressLarge() {
+    @Test func visuallySelectedPagingItemProgressLarge() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
@@ -69,10 +69,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.visuallySelectedPagingItem as? Item?, Item(index: 1))
+        #expect(state.visuallySelectedPagingItem as? Item? == Item(index: 1))
     }
 
-    func testVisuallySelectedPagingItemProgressSmall() {
+    @Test func visuallySelectedPagingItemProgressSmall() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: Item(index: 1),
@@ -81,10 +81,10 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.visuallySelectedPagingItem as? Item?, Item(index: 0))
+        #expect(state.visuallySelectedPagingItem as? Item? == Item(index: 0))
     }
 
-    func testVisuallySelectedPagingItemUpcomingPagingItemNil() {
+    @Test func visuallySelectedPagingItemUpcomingPagingItemNil() {
         let state: PagingState = .scrolling(
             pagingItem: Item(index: 0),
             upcomingPagingItem: nil,
@@ -93,6 +93,6 @@ final class PagingStateTests: XCTestCase {
             distance: 0
         )
 
-        XCTAssertEqual(state.visuallySelectedPagingItem as? Item?, Item(index: 0))
+        #expect(state.visuallySelectedPagingItem as? Item? == Item(index: 0))
     }
 }

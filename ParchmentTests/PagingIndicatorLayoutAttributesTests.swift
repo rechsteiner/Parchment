@@ -1,12 +1,14 @@
 import Foundation
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingIndicatorLayoutAttributesTests: XCTestCase {
-    let layoutAttributes = PagingIndicatorLayoutAttributes()
-    var options = PagingOptions()
+@MainActor
+struct PagingIndicatorLayoutAttributesTests {
+    private let layoutAttributes = PagingIndicatorLayoutAttributes()
+    private let options: PagingOptions
 
-    override func setUp() {
+    init() {
+        var options = PagingOptions()
         options.font = UIFont.systemFont(ofSize: 15)
         options.selectedFont = UIFont.boldSystemFont(ofSize: 15)
         options.textColor = .blue
@@ -18,18 +20,19 @@ final class PagingIndicatorLayoutAttributesTests: XCTestCase {
             spacing: UIEdgeInsets(),
             insets: UIEdgeInsets()
         )
+        self.options = options
     }
 
-    func testConfigure() {
+    @Test func configure() {
         layoutAttributes.configure(options)
 
-        XCTAssertEqual(layoutAttributes.backgroundColor, UIColor.green)
-        XCTAssertEqual(layoutAttributes.frame.height, 20)
-        XCTAssertEqual(layoutAttributes.frame.origin.y, 20)
-        XCTAssertEqual(layoutAttributes.zIndex, Int.max)
+        #expect(layoutAttributes.backgroundColor == UIColor.green)
+        #expect(layoutAttributes.frame.height == 20)
+        #expect(layoutAttributes.frame.origin.y == 20)
+        #expect(layoutAttributes.zIndex == Int.max)
     }
 
-    func testTweening() {
+    @Test func tweening() {
         layoutAttributes.configure(options)
 
         let from = PagingIndicatorMetric(
@@ -45,12 +48,12 @@ final class PagingIndicatorLayoutAttributesTests: XCTestCase {
         )
 
         layoutAttributes.update(from: from, to: to, progress: 0)
-        XCTAssertEqual(layoutAttributes.frame, CGRect(x: 50, y: 20, width: 150, height: 20))
+        #expect(layoutAttributes.frame == CGRect(x: 50, y: 20, width: 150, height: 20))
 
         layoutAttributes.update(from: from, to: to, progress: 1)
-        XCTAssertEqual(layoutAttributes.frame, CGRect(x: 200, y: 20, width: 50, height: 20))
+        #expect(layoutAttributes.frame == CGRect(x: 200, y: 20, width: 50, height: 20))
 
         layoutAttributes.update(from: from, to: to, progress: 0.5)
-        XCTAssertEqual(layoutAttributes.frame, CGRect(x: 125, y: 20, width: 100, height: 20))
+        #expect(layoutAttributes.frame == CGRect(x: 125, y: 20, width: 100, height: 20))
     }
 }

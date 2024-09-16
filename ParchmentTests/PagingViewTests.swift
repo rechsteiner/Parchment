@@ -1,11 +1,12 @@
+import Testing
 @testable import Parchment
-import XCTest
 
-final class PagingViewTests: XCTestCase {
-    var pagingView: PagingView!
-    var collectionView: UICollectionView!
+@MainActor
+final class PagingViewTests {
+    private let pagingView: PagingView
+    private let collectionView: UICollectionView
 
-    override func setUp() {
+    init() {
         let options = PagingOptions()
         let pageView = UIView(frame: .zero)
 
@@ -21,13 +22,13 @@ final class PagingViewTests: XCTestCase {
         )
     }
 
-    func testMenuBackgroundColor() {
+    @Test func menuBackgroundColor() {
         pagingView.configure()
 
         var options = PagingOptions()
         options.menuBackgroundColor = .green
         pagingView.options = options
 
-        XCTAssertEqual(collectionView.backgroundColor, .green)
+        #expect(collectionView.backgroundColor == .green)
     }
 }

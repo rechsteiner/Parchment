@@ -1,8 +1,8 @@
 import UIKit
 
 open class PagingBorderLayoutAttributes: UICollectionViewLayoutAttributes {
-    open var backgroundColor: UIColor?
-    open var insets: UIEdgeInsets = UIEdgeInsets()
+    nonisolated(unsafe) open var backgroundColor: UIColor?
+    nonisolated(unsafe) open var insets: UIEdgeInsets = UIEdgeInsets()
 
     open override func copy(with zone: NSZone? = nil) -> Any {
         let copy = super.copy(with: zone) as! PagingBorderLayoutAttributes

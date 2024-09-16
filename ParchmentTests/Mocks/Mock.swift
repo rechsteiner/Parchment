@@ -7,11 +7,13 @@ enum Action: Equatable {
 }
 
 struct MockCall: Equatable {
+    @MainActor
     static var callCount: Int = 0
 
     let index: Int
     let action: Action
 
+    @MainActor
     init(action: Action) {
         Self.callCount += 1
         self.index = Self.callCount
@@ -25,6 +27,7 @@ extension MockCall: Comparable {
     }
 }
 
+@MainActor
 protocol Mock {
     var calls: [MockCall] { get }
 }

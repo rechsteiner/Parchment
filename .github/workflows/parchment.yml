@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.0-beta'
+          xcode-version: '16.0'
       - uses: actions/checkout@v3
       - name: Unit Tests
         run: xcodebuild -project Parchment.xcodeproj -scheme "Parchment" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=18.0' test

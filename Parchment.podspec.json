@@ -10,7 +10,7 @@
     "git": "https://github.com/rechsteiner/Parchment.git",
     "tag": "v4.1.0"
   },
-  "swift_version": "5.10",
+  "swift_version": "6.0",
   "platforms": {
     "ios": "12.0"
   },

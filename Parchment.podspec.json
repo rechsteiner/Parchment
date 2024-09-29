@@ -1,6 +1,6 @@
 {
   "name": "Parchment",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "license": "MIT",
   "summary": "A flexible paging menu controller with support for infinite data sources.",
     "description": "Parchment allows you to page between view controllers while showing menu items that scrolls along with the content. It’s build to be very customizable, it’s well-tested and written fully in Swift.",
@@ -8,7 +8,7 @@
   "authors": "Martin Rechsteiner",
   "source": {
     "git": "https://github.com/rechsteiner/Parchment.git",
-    "tag": "v4.0.0"
+    "tag": "v4.1.0"
   },
   "swift_version": "5.10",
   "platforms": {

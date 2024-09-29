@@ -2,6 +2,12 @@
 
 `Parchment` adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0](https://github.com/rechsteiner/Parchment/compare/v4.0.0...v4.1.0) - 2024-09-29
+
+### Changes
+
+- Enable Swift 6 mode #723
+
 ## [4.0.0](https://github.com/rechsteiner/Parchment/compare/v3.4.0...v4.0.0) - 2024-05-25
 
 Version 4.0 introduced a new and improved API for PageView in SwiftUI. Each page can now show define their own menu items, which can be any SwiftUI view. The new API also supports result builders, which allows you to easily setup your PageView.
